@@ -104,16 +104,16 @@
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .dock {
-    bottom: 16px;             /* 上提，远离屏幕底边，点击更顺手 */
+    bottom: 12px;             /* 略微下压，减少遮挡 */
     left: 50%;
     transform: translateX(-50%);
     width: auto;              /* 不再撑满，让内容决定宽度 */
-    max-width: 380px;
+    max-width: 320px;         /* 收窄，更不挡视线 */
   }
 
   .dock__inner {
-    border-radius: 28px;      /* 更大更圆润 */
-    padding: 8px;             /* 加厚内边距，整体更高 */
+    border-radius: 24px;      /* 圆角略收 */
+    padding: 5px;             /* 减薄内边距，整体更矮 */
   }
 
   .dock__track {
@@ -121,23 +121,23 @@
   }
 
   .dock__item {
-    padding: 13px 16px;       /* 明显加大，点击区域更大 */
-    gap: 4px;
+    padding: 9px 12px;        /* 缩小，高度更矮、点击区域更紧凑 */
+    gap: 3px;
   }
 
   .dock__icon {
-    font-size: 1.35rem;       /* 图标更大 */
-    width: 28px;
-    height: 28px;
+    font-size: 1.1rem;        /* 图标缩小 */
+    width: 24px;
+    height: 24px;
   }
 
   .dock__label {
-    font-size: 0.64rem;       /* 字号加大，更易读 */
+    font-size: 0.56rem;       /* 字号缩小，更精致 */
   }
 
-  /* 点指示器下移，避免与文字重叠 */
+  /* 点指示器上移，避免与文字重叠 */
   .dock__indicator {
-    bottom: 4px;
+    bottom: 3px;
     width: 4px;
     height: 4px;
   }

@@ -179,6 +179,7 @@
   }
 
   .business-card__body {
+    justify-content: flex-start;   /* 标题齐平在顶部，底部留空（长短文案卡片视觉整齐） */
     padding: var(--space-sm) var(--space-md) var(--space-md);  /* 顶部加大间距，icon→标题不拥挤 */
   }
 
