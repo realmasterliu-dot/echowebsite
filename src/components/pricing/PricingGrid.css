@@ -1,0 +1,336 @@
+/* ============================================================
+   PricingGrid — 价格卡片
+   4张卡片：light / orange(最受欢迎) / light / dark(旗舰领航)
+   BorderGlow 边缘流光 + 勾选 feature 列表 + 分割线
+   ============================================================ */
+
+.pricing {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.pricing__header {
+  margin-bottom: var(--space-lg);
+}
+
+/* ---- Grid Layout（4列等高） ---- */
+.pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(14px, 1.6vw, 22px);
+  align-items: stretch; /* 所有卡片等高 */
+}
+
+/* 等高链：grid → ScrollReveal → BorderGlow → article 全部 stretch 100% */
+.pricing__grid > .scroll-reveal {
+  height: 100%;
+}
+
+.pricing__grid .border-glow {
+  height: 100%;
+}
+
+/* ---- Card Base（固定等高） ---- */
+.price-card {
+  position: relative;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 85, 0, 0.4); /* 默认橙色描边（6800/8800） */
+  box-shadow: 0 0 0 1px rgba(255, 85, 0, 0.1), 0 12px 40px rgba(255, 85, 0, 0.06);
+  padding: clamp(1.8rem, 3vw, 2.6rem) clamp(1.5rem, 2.5vw, 2.2rem);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* grid stretch 等高 */
+}
+
+/* ---- Badge ---- */
+.price-card__badge {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 5px 18px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 0 0 14px 14px;
+  z-index: 2;
+}
+
+.price-card__badge--orange {
+  background: linear-gradient(135deg, #FF5500, #E64D00);
+}
+
+.price-card__badge--purple {
+  background: linear-gradient(135deg, #8E49CA, #6B35A0);
+}
+
+/* Dark card badge — 仅顶部标签为浅金背景（紫黑卡片上的浅金徽章） */
+.price-card--dark .price-card__badge,
+.price-card--dark .price-card__badge--purple {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  border-radius: 0 0 14px 14px;
+  background: #fdefb5;
+  color: #3A2E12;
+}
+
+/* ---- Header: name + price ---- */
+.price-card__header {
+  margin-bottom: clamp(0.7rem, 1.6vw, 1.15rem);
+}
+
+.price-card__name {
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2vw, 1.3rem); /* 稍大 */
+  color: var(--color-text);
+  line-height: 1.3;
+  margin-bottom: clamp(0.45rem, 1.1vw, 0.75rem);
+}
+
+.price-card--dark .price-card__name {
+  color: #fff;
+}
+
+/* ---- Price（大号逗号分隔，单行不换行） ---- */
+.price-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  line-height: 1;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.price-card__amount {
+  font-family: var(--font-family-base);
+  font-weight: 800; /* 下调一档 */
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem); /* 缩小，避免「/月」换行 */
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+/* 旗舰领航：价格白→浅金渐变（左上白，右下浅金） */
+.price-card__amount--gold {
+  background: linear-gradient(135deg, #ffffff 0%, #fdefb5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.price-card--orange .price-card__amount {
+  color: var(--color-text);
+}
+
+.price-card--dark .price-card__amount {
+  color: #fdefb5;
+}
+
+.price-card__period {
+  font-size: clamp(0.88rem, 1.7vw, 1.15rem); /* 稍大 */
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-left: 2px;
+}
+
+.price-card--dark .price-card__period {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* ---- Description（字号加大，间距加大，统一2行等高） ---- */
+.price-card__desc {
+  font-size: clamp(0.82rem, 1.55vw, 0.92rem);
+  color: var(--color-text-secondary);
+  line-height: 1.58;
+  margin-bottom: clamp(1rem, 2.2vw, 1.6rem); /* 加大间距 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price-card__desc--light {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ---- Feature List（间距加大） ---- */
+.price-card__features {
+  flex: 1;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px; /* 行间距加大 */
+  padding: 0;
+  margin: 0 0 clamp(1rem, 2.2vw, 1.6rem) 0;
+}
+
+/* 单个 feature 行 */
+.price-card__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: clamp(0.82rem, 1.55vw, 0.9rem); /* 稍大 */
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.price-card--dark .price-card__feature {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Disabled / grayed-out feature */
+.price-card__feature--disabled {
+  opacity: 0.38;
+}
+
+.price-card--dark .price-card__feature--disabled {
+  opacity: 0.32;
+}
+
+/* ---- 勾选图标（✓）替代圆点 ---- */
+.price-card__check {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--color-primary);
+}
+
+.price-card__check--orange {
+  color: #FF5500;
+}
+
+.price-card__check--white {
+  color: #C9A227;
+}
+
+/* Disabled 勾 = 灰色 */
+.price-card__check--disabled {
+  opacity: 0.38;
+  color: var(--color-text-light);
+}
+
+/* ---- 分割线 ---- */
+.price-card__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 4px 0;
+  list-style: none;
+}
+
+.price-card--dark .price-card__divider {
+  background: rgba(180,150,60,0.35);
+}
+
+.price-card--orange .price-card__divider {
+  background: rgba(var(--color-primary-rgb), 0.18);
+}
+
+/* ---- Bonus footer（单行显示） ---- */
+.price-card__bonus {
+  font-size: clamp(0.74rem, 1.4vw, 0.82rem);
+  color: var(--color-text-light);
+  padding-top: clamp(0.65rem, 1.6vw, 1.1rem);
+  border-top: 1px solid var(--color-border);
+  line-height: 1.48;
+  white-space: nowrap; /* 强制单行 */
+}
+
+.price-card__bonus--light {
+  color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(201, 162, 39, 0.3);
+}
+
+/* ---- Orange card specific（最受欢迎：橙色描边） ---- */
+.price-card--orange {
+  border-color: #FF5500;
+  box-shadow: 0 0 0 1px rgba(255, 85, 0, 0.45), 0 12px 40px rgba(255, 85, 0, 0.12);
+}
+
+.price-card--orange .price-card__name {
+  color: var(--color-text);
+}
+
+.price-card--orange .price-card__desc {
+  color: var(--color-text-secondary);
+}
+
+/* ---- Purple card specific（卓越长赢：紫色描边发光） ---- */
+.price-card--purple {
+  border-color: #8E49CA;
+  box-shadow: 0 0 0 1px rgba(142, 73, 202, 0.45), 0 12px 40px rgba(142, 73, 202, 0.14);
+}
+
+.price-card--purple .price-card__name {
+  color: var(--color-text);
+}
+
+.price-card--purple .price-card__desc {
+  color: var(--color-text-secondary);
+}
+
+.price-card--purple .price-card__badge--purple {
+  background: linear-gradient(135deg, #8E49CA, #6B35A0);
+  color: #fff;
+}
+
+/* ---- Dark card → 品牌紫→黑渐变（左上品牌紫 #8E49CA，右下黑占多数，金色描边 + 浅金标签） ---- */
+.price-card--dark {
+  color: #fff;
+  background: linear-gradient(135deg, #8E49CA 0%, #3A2150 18%, #1A0F26 45%, #0E0814 100%);
+  border-color: #C9A227;
+  box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.5), 0 16px 48px rgba(142, 73, 202, 0.22);
+}
+
+/* 旗舰领航价格渐变（覆盖 dark 的白色兜底） */
+.price-card--dark .price-card__amount--gold {
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1200px) {
+  .pricing__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: clamp(10px, 2.5vw, 16px);
+    padding-bottom: var(--space-sm);
+    /* 负 margin 让卡片贴边，配合 padding 让首尾有留白 */
+    margin-inline: calc(-1 * clamp(1rem, 4vw, 1.8rem));
+    padding-inline: clamp(1rem, 4vw, 1.8rem);
+  }
+
+  .pricing__grid::-webkit-scrollbar { display: none; }
+
+  .price-card {
+    flex: 0 0 82%;           /* 卡片宽度固定 ~82% 视口，不随容器缩 */
+    min-width: 280px;        /* 最小宽度保证内容不乱 */
+    max-width: 360px;
+    scroll-snap-align: center;
+    height: auto;             /* 不再强制等高（移动端各自按内容撑开） */
+    border-radius: 20px;
+    padding: clamp(1.8rem, 5vw, 2.4rem) clamp(1.2rem, 3.5vw, 1.8rem);  /* 顶部留足空间给 badge/tag */
+  }
+
+  .price-card__name { font-size: 1.05rem; }
+  .price-card__amount { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+  .price-card__desc { font-size: 0.8rem; margin-bottom: 0.75rem; }
+  .price-card__feature { font-size: 0.78rem; gap: 8px; }
+  .price-card__features { gap: 8px; margin-bottom: 0.75rem; }
+  .price-card__bonus { font-size: 0.7rem; white-space: normal; }   /* 允许换行 */
+}

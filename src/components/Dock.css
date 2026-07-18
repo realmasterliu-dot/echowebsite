@@ -1,0 +1,143 @@
+/* ============================================================
+   Dock — Apple Liquid Glass Bottom Navigation
+   ============================================================ */
+
+.dock {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-dock);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.dock__inner {
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.dock__track {
+  display: flex;
+  gap: 2px;
+}
+
+.dock__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 18px;
+  border-radius: 18px;
+  color: var(--color-text-secondary);
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    color 0.25s ease,
+    background 0.25s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover / Active scale */
+.dock__item:hover {
+  transform: translateY(-6px) scale(1.12);
+  color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.08);
+}
+
+.dock__item--active {
+  color: var(--color-primary);
+}
+
+.dock__item--active .dock__icon {
+  transform: scale(1.05);
+}
+
+/* Neighbor magnification on hover via sibling selector */
+.dock__track:hover .dock__item:hover + .dock__item { transform: translateY(-3px) scale(1.06); }
+.dock__track:hover .dock__item:has(+ .dock__item:hover) { transform: translateY(-3px) scale(1.06); }
+
+.dock__icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: transform 0.3s var(--ease-out-expo);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dock__label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.dock__item:hover .dock__label,
+.dock__item--active .dock__label {
+  opacity: 1;
+}
+
+/* Active dot indicator */
+.dock__indicator {
+  position: absolute;
+  bottom: 5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .dock {
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;           /* 不再撑满，让内容决定宽度 */
+    max-width: 320px;
+  }
+
+  .dock__inner {
+    border-radius: 22px;
+    padding: 5px;
+  }
+
+  .dock__track {
+    justify-content: center;   /* 确保内容居中 */
+  }
+
+  .dock__item {
+    padding: 8px 12px;         /* 缩小水平内边距，整体更紧凑 */
+  }
+
+  .dock__icon {
+    font-size: 1rem;
+    width: 20px;
+    height: 20px;
+  }
+
+  .dock__label {
+    font-size: 0.52rem;        /* 稍小 */
+  }
+
+  /* 点指示器下移，避免与文字重叠 */
+  .dock__indicator {
+    bottom: 2px;
+    width: 3px;
+    height: 3px;
+  }
+}

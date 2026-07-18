@@ -1,0 +1,156 @@
+/* ============================================================
+   ContactInfo — 联系方式
+   ============================================================ */
+
+.contact-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  align-items: stretch;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Card */
+.contact-info__card {
+  padding: var(--space-lg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.contact-info__logo {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  object-fit: contain;
+}
+
+.contact-info__name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+}
+
+/* Details list */
+.contact-info__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.contact-info__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+}
+
+.contact-info__icon {
+  width: 20px;
+  color: var(--color-primary);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Phone rows — 三列网格：图标 / 姓名 / 号码，号码列自动对齐 */
+.contact-info__phones {
+  display: grid;
+  grid-template-columns: 20px max-content 1fr;
+  align-items: center;
+  column-gap: var(--space-xs);
+  row-gap: var(--space-xs);
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+}
+
+.contact-info__person {
+  white-space: nowrap;
+}
+
+.contact-info__phone {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* CTA button */
+.contact-info__btn {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s ease;
+  box-shadow: 0 6px 24px rgba(var(--color-primary-rgb), 0.25);
+}
+
+.contact-info__btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(var(--color-primary-rgb), 0.35);
+}
+
+/* Closing quote */
+.contact-info__closing {
+  padding: var(--space-lg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.contact-info__closing-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+  line-height: 1.25;
+  white-space: pre-line;
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--color-text), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contact-info__closing-text {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  margin-bottom: var(--space-sm);
+}
+
+.contact-info__closing-subtext {
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .contact-info { grid-template-columns: 1fr; gap: var(--space-md); }
+  .contact-info__closing { text-align: center; }
+}

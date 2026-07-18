@@ -1,0 +1,118 @@
+/* 必须先引入设计变量（:root 自定义属性），所有 var() 依赖它 */
+@import './styles/variables.css';
+
+/* ============================================================
+   Global Reset + Base Styles
+   字体: 江城圆体 (JiangChengRound)
+   ============================================================ */
+
+/* ---- @font-face: 江城圆体全系列 ---- */
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/fonts/jiangcheng-300.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/fonts/jiangcheng-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/fonts/jiangcheng-500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/fonts/jiangcheng-600.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/fonts/jiangcheng-700.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- CSS Reset ---- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-weight: var(--fw-regular);
+  line-height: 1.7;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--fw-medium);
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+#root {
+  position: relative;
+  padding-bottom: var(--dock-height);
+}
+
+/* ---- Unified container (版心) ----
+   所有内容区块统一套用，桌面端限制最大宽度并居中，
+   移动端保留合理左右留白，保证各页面布局一致 */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+}

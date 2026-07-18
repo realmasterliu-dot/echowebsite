@@ -1,0 +1,24 @@
+/* ============================================================
+   ScrollRevealText — 滚动逐词揭示
+   词级 inline-block + CSS 自然换行，全宽铺满版心
+   ============================================================ */
+
+.scroll-reveal-text {
+  margin: 0;
+  width: 100%;
+}
+
+.scroll-reveal-text__body {
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  line-height: 1.85;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin: 0;
+  width: 100%;
+}
+
+/* 每个词/字 — inline-block 让 CSS 控制自然换行，填满整行 */
+.sr-word {
+  display: inline-block;
+  will-change: opacity, filter;
+}

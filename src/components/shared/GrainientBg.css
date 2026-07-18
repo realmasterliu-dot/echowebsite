@@ -1,0 +1,26 @@
+.grainient-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.grainient-bg__gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.grainient-bg__noise {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 1;
+  opacity: 0.035;
+  animation: grainShift 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.grainient-bg__content {
+  position: relative;
+  z-index: 2;
+}

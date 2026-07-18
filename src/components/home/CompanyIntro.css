@@ -1,0 +1,115 @@
+/* ============================================================
+   CompanyIntro — 我们是谁（左右布局 + TiltedCard）
+   ============================================================ */
+
+.company-intro {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+/* ===== 左右 Grid ===== */
+.company-intro__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+/* ===== 左侧：文字 ===== */
+.company-intro__left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+}
+
+/* 统一标题样式 — "我们是谁" 和 "品牌理念" 用同一个类 */
+.company-intro__title {
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3em;
+}
+
+/* 统一正文样式 — 与品牌理念字号一致 (clamp 0.9~1.05rem，精致小巧) */
+.company-intro__text {
+  font-weight: 400;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.95;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* 首段加粗 */
+.company-intro__text--lead {
+  font-weight: 450;
+  color: var(--color-text-primary);
+}
+
+/* ===== 右侧：TiltedCard ===== */
+.company-intro__right {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 1rem;
+}
+
+/* TiltedCard 容器 */
+.company-intro__right .tilted-card-figure {
+  height: auto;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ===== 品牌理念 — 填满版心宽度 ===== */
+.company-intro__philosophy {
+  margin-top: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* ---- Tablet (<=1024px) ---- */
+@media (max-width: 1024px) {
+  .company-intro__grid {
+    gap: 2.5rem;
+  }
+
+  .company-intro__right .tilted-card-figure {
+    max-width: 400px;
+  }
+}
+
+/* ---- Mobile (<=768px) ---- */
+@media (max-width: 768px) {
+  .company-intro__grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .company-intro__right {
+    order: -1; /* 手机端图片在上 */
+    padding-top: 0;
+    justify-content: center;
+  }
+
+  .company-intro__left {
+    padding-top: 0;
+  }
+
+  .company-intro__title {
+    text-align: center;
+  }
+
+  .company-intro__text {
+    font-size: 0.88rem;
+  }
+
+  .company-intro__philosophy {
+    gap: 1.25rem;
+    margin-top: var(--space-lg);
+  }
+}

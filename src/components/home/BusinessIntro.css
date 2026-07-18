@@ -1,0 +1,181 @@
+/* ============================================================
+   BusinessIntro — Square Bento Cards（全局 bento 规范）
+   正方形 / 圆角 radius-md / icon 左上角小方块
+   hover 聚光 + 上浮 / 正文底端左对齐
+   ============================================================ */
+
+.business-intro {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.business-intro__header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+/* 标题与品牌理念统一大小 */
+.business-intro__title {
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3em;
+}
+
+/* 4列网格 — 正方形卡片 */
+.business-intro__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-sm);
+}
+
+/* ---- Card（统一 bento 规范） ---- */
+.business-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); /* 统一圆角 12px */
+  cursor: pointer;
+  overflow: hidden;
+
+  /* 加高：保证不拥挤 */
+  min-height: 220px;
+
+  /* Flex 纵向排列：icon在上，body在下撑满剩余空间 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition:
+    transform 0.35s var(--ease-out-expo),
+    box-shadow 0.35s ease,
+    border-color 0.3s ease;
+}
+
+.business-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(var(--color-primary-rgb), 0.10);
+  border-color: rgba(var(--color-primary-rgb), 0.25);
+}
+
+/* 聚光灯效果 */
+.business-card__spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Icon — 统一规范：加大圆角方块，与文字区等宽视觉 */
+.business-card__icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px; /* 统一小圆角方块 */
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.10), rgba(var(--color-primary-light-rgb), 0.08));
+  color: var(--color-primary);
+  font-size: 1.25rem; /* 加大 icon 字号 */
+  position: relative;
+  z-index: 1;
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    background 0.3s ease,
+    color 0.3s ease;
+  flex-shrink: 0;
+  margin: var(--space-lg) var(--space-md) 0;
+}
+
+.business-card:hover .business-card__icon {
+  transform: scale(1.08) rotate(-5deg);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: #fff;
+}
+
+/* Content body — 底端左对齐，撑满剩余空间 */
+.business-card__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 文字沉底 */
+  align-items: flex-start; /* 左对齐 */
+  padding: var(--space-md) var(--space-md) var(--space-lg); /* 顶部加大间距，icon→标题不拥挤 */
+  flex-grow: 1;
+}
+
+/* 统一标题字号（全站 bento 一致） */
+.business-card__title {
+  font-size: 1.05rem; /* 稍大 */
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-text);
+  margin-bottom: 8px; /* 间距 */
+  transition: color 0.25s ease;
+}
+
+.business-card:hover .business-card__title {
+  color: var(--color-primary);
+}
+
+/* 统一正文字号（全站 bento 一致） */
+.business-card__desc {
+  font-size: 0.86rem; /* 稍大 */
+  color: var(--color-text-secondary);
+  line-height: 1.6; /* 行高 */
+}
+
+/* Arrow */
+.business-card__arrow {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  font-size: 1.2rem;
+  color: var(--color-text-light);
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    color 0.25s ease,
+    opacity 0.25s ease;
+  opacity: 0;
+  z-index: 1;
+}
+
+.business-card:hover .business-card__arrow {
+  transform: translateX(2px) translateY(-2px);
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .business-intro__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .business-intro__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xs);
+  }
+
+  /* 移动端：卡片不要太高，去掉 min-height 强制撑高 */
+  .business-card {
+    min-height: unset;
+  }
+
+  .business-card__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    margin: var(--space-md) var(--space-md) 0;  /* 加大边距，不紧绷 */
+  }
+
+  .business-card__body {
+    padding: var(--space-sm) var(--space-md) var(--space-md);  /* 顶部加大间距，icon→标题不拥挤 */
+  }
+}

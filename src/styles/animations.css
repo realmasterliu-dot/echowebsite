@@ -1,0 +1,72 @@
+/* ============================================================
+   Keyframe Animations Library
+   ============================================================ */
+
+/* ---- Border Glow Rotation (Bento Cards) ---- */
+@keyframes borderGlow {
+  0% { --glow-angle: 0deg; }
+  100% { --glow-angle: 360deg; }
+}
+
+@property --glow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ---- Fade In Up ---- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Scale In ---- */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ---- Shimmer Sweep (CTA buttons) ---- */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ---- Float gentle ---- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* ---- Pulse Glow ---- */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.15); }
+  50%      { box-shadow: 0 0 40px rgba(var(--color-primary-rgb), 0.3); }
+}
+
+/* ---- Grain texture subtle shift ---- */
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(-2%, -2%); }
+  50%      { transform: translate(2%, 1%); }
+  75%      { transform: translate(-1%, 2%); }
+}
+
+/* ---- Dock bounce ---- */
+@keyframes dockBounce {
+  0%   { transform: scale(1) translateY(0); }
+  40%  { transform: scale(1.15) translateY(-8px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* ---- Stepper line draw ---- */
+@keyframes lineDraw {
+  from { scaleX: 0; }
+  to   { scaleX: 1; }
+}
+
+/* ---- Spark particle ---- */
+@keyframes sparkParticle {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}

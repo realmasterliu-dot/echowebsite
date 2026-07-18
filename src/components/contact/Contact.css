@@ -1,0 +1,8 @@
+/* ============================================================
+   Contact Section — Container
+   ============================================================ */
+
+.contact {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-lg);
+}

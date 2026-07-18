@@ -1,0 +1,62 @@
+/* ============================================================
+   BorderGlow — react-bits 风格边缘发光效果
+   ============================================================ */
+
+.border-glow {
+  position: relative;
+  border-radius: var(--border-radius, 24px);
+  background: var(--bg-color, transparent);
+  /* 用 clip-path 替代 overflow:hidden 做圆角裁切，避免裁切 badge 和光效 */
+  clip-path: inset(0 round var(--border-radius, 24px));
+}
+
+/* Animated rotating gradient ring */
+.border-glow__ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--border-radius, 24px) + 2px);
+  background: conic-gradient(
+    from var(--ring-angle, 0deg),
+    var(--g1, #FF5500),
+    var(--g2, #FF8200) 25%,
+    transparent 50%,
+    var(--g3, #8E49CA) 75%,
+    var(--g1, #FF5500)
+  );
+  z-index: -1;
+  opacity: 0.6;
+  animation: borderGlowRing 5s linear infinite;
+  filter: blur(2px);
+}
+
+@keyframes borderGlowRing {
+  to { --ring-angle: 360deg; }
+}
+
+@property --ring-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Edge glow cone on mouse proximity */
+.border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: calc(var(--border-radius, 24px) + 4px);
+  background: radial-gradient(
+    var(--glow-radius, 40px) circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(var(--glow-color-rgb, 255 85 0), calc(var(--glow-intensity, 0) * 0.35)),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.15s ease;
+}
+
+/* Content sits above effects */
+.border-glow > * {
+  position: relative;
+  z-index: 1;
+}

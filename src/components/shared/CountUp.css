@@ -1,0 +1,56 @@
+.count-up {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.count-up__number {
+  font-family: var(--font-family-base);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero stat — 放大 */
+.count-up--lg .count-up__number {
+  font-size: clamp(3.6rem, 9vw, 6.5rem);
+}
+
+.count-up--lg .count-up__label {
+  max-width: 260px;
+  font-size: 0.95rem;
+}
+
+/* Mid stat — 数据 bento 卡 */
+.count-up--md .count-up__number {
+  font-size: clamp(2.6rem, 4.5vw, 3.6rem);
+  white-space: nowrap; /* 防 "200+" / "1000万+" 换行 */
+}
+
+.count-up--md .count-up__label {
+  max-width: 100%;
+  font-size: 0.85rem;
+}
+
+.count-up__suffix {
+  font-size: 0.5em;
+  font-weight: 600;
+}
+
+.count-up__prefix {
+  font-size: 0.5em;
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.count-up__label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  max-width: 200px;
+}
