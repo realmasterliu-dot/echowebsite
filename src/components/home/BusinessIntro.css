@@ -163,10 +163,12 @@
     gap: var(--space-xs);
   }
 
-  /* 移动端：固定正方形，8个大小完全一致，不再随内容高低不一 */
+  /* 移动端：纵向长方形，所有卡片等高 = 最高内容（由 JS 设置 --biz-card-h）
+     去掉正方形与行数截断，确保「内容营销」「本地生活整合运营」等最长文案完整显示 */
   .business-card {
     min-height: unset;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: auto;
+    height: var(--biz-card-h, auto);
   }
 
   .business-card__icon {
@@ -181,9 +183,9 @@
   }
 
   .business-card__desc {
-    -webkit-line-clamp: 3;       /* 正方形内限制行数，避免溢出 */
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    display: block;              /* 取消 -webkit-box 截断，整段文案完整显示 */
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
   }
 }

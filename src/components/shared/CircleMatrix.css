@@ -89,10 +89,11 @@
     text-align: left;
   }
 
-  /* 手机端紧凑版：10 圆（5列2行）点亮 6 → 点阵在左、64% 在右 */
+  /* 手机端紧凑版：10 圆（5列2行）点亮 6 → 点阵在左、64% 在右，整体水平居中 */
   .circle-matrix--mobile {
     flex-direction: row;
     align-items: center;
+    justify-content: center;     /* 点阵 + 64% 作为整体居中，不再偏左 */
     gap: clamp(1.2rem, 5vw, 2rem);
   }
 
