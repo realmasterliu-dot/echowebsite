@@ -550,11 +550,41 @@
   .about__block--right .about__block-title { margin-left: 0; }
   .about__highlights { overflow-x: auto; }
   .about__stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .about__values-grid { grid-template-columns: 1fr 1fr; }
+  /* 数字卡：4 个横向长方形 bento，竖向依次堆叠，等高；内部沿用商业IP风格（数字上、文案下） */
+  .about__result-bento-grid { grid-template-columns: 1fr; gap: var(--space-sm); }
+  .about__result-bento {
+    flex-direction: column;   /* 数字在上、文案在下（同商业IP） */
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-height: 168px;        /* 刘总强调：4 张必须等高；放宽到能容纳 4 行整段文案 */
+    padding: var(--space-md) var(--space-md);
+  }
+  .about__result-bento .count-up {
+    flex-direction: column;   /* 还原：数字上、文案下 */
+    align-items: flex-start;
+    text-align: left;
+    gap: 2px;
+    width: 100%;
+  }
+  .about__result-bento .count-up__number {
+    font-size: clamp(2.2rem, 9vw, 3rem);  /* 手机端适配横排 */
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .about__result-bento .count-up__label {
+    text-align: left;
+    margin: 0;
+    /* 去掉行数限制，整段文案完整显示；卡片高度由 min-height 统一为等高 */
+  }
+  .about__values-grid { grid-template-columns: repeat(2, 1fr); }   /* 值卡：正方形 2×2 */
+  .about__value-card { aspect-ratio: 1 / 1; min-height: unset; }    /* 正方形，覆盖桌面端长方形 */
   .about__datapoints { grid-template-columns: 1fr; }
   .about__points-bento { grid-template-columns: repeat(2, 1fr); }
   .about__purple-bento-grid { grid-template-columns: 1fr 1fr; }
   .about__ip-bento-grid { grid-template-columns: 1fr; }
+  .about__ip-bento { text-align: left; min-height: 160px; }  /* 手机端小字左对齐 + 4 卡统一等高（以最高的"17类"为准） */
+  .about__ip-bento-desc { text-wrap: pretty; }      /* 防止单个字单独成行（孤字） */
 
   /* 移动端：柱状图改为横向（更适合手机屏幕比例） */
   .growth-chart__bars {

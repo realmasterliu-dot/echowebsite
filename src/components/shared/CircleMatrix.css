@@ -81,22 +81,33 @@
 
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
-  .circle-matrix {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+  .circle-matrix__grid {
+    gap: 5px;
   }
 
   .circle-matrix__stat {
     text-align: left;
   }
 
-  .circle-matrix__dot {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+  /* 手机端紧凑版：10 圆（5列2行）点亮 6 → 点阵在左、64% 在右 */
+  .circle-matrix--mobile {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(1.2rem, 5vw, 2rem);
   }
 
-  .circle-matrix__grid {
-    gap: 5px;
+  .circle-matrix--mobile .circle-matrix__grid {
+    flex: 0 0 auto;
+    width: clamp(110px, 34vw, 150px);   /* 固定宽度，10 圆不散不挤 */
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .circle-matrix__number {
+    font-size: clamp(2.8rem, 15vw, 4rem);  /* 手机上 64% 仍醒目 */
+  }
+
+  .circle-matrix__label {
+    max-width: 100%;
+    font-size: 0.82rem;
   }
 }

@@ -159,13 +159,14 @@
 
 @media (max-width: 768px) {
   .business-intro__grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;   /* 2列 → 8个业务={4行2列} */
     gap: var(--space-xs);
   }
 
-  /* 移动端：卡片不要太高，去掉 min-height 强制撑高 */
+  /* 移动端：固定正方形，8个大小完全一致，不再随内容高低不一 */
   .business-card {
     min-height: unset;
+    aspect-ratio: 1 / 1;
   }
 
   .business-card__icon {
@@ -177,5 +178,12 @@
 
   .business-card__body {
     padding: var(--space-sm) var(--space-md) var(--space-md);  /* 顶部加大间距，icon→标题不拥挤 */
+  }
+
+  .business-card__desc {
+    -webkit-line-clamp: 3;       /* 正方形内限制行数，避免溢出 */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

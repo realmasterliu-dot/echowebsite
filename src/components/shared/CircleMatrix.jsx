@@ -25,12 +25,27 @@ export default function CircleMatrix({
 }) {
   const containerRef = useRef(null)
   const [showStat, setShowStat] = useState(false)
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+  )
 
-  const rows = Math.ceil(total / columns)
-  const circles = Array.from({ length: total }, (_, i) => ({
+  // 手机端改用紧凑配置：10 圆（5列2行）点亮 6，右侧显示 64
+  const cfg = isMobile
+    ? { total: 10, fillCount: 6, columns: 5, value: 64 }
+    : { total, fillCount, columns, value }
+
+  const circles = Array.from({ length: cfg.total }, (_, i) => ({
     id: i,
-    filled: i < fillCount,
+    filled: i < cfg.fillCount,
   }))
+
+  // 监听屏幕宽度变化，桌面/手机切换时重渲染
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    const handler = (e) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   useEffect(() => {
     const el = containerRef.current
@@ -46,14 +61,16 @@ export default function CircleMatrix({
     })
 
     // 逐个点亮动画 — 从左上到右下
+    // 区间缩短：start/end 提前并压缩，让点阵在进入视口不久就点亮完，不必滑很远
+    // showStat 设为「粘性」：一旦数字出现过（进入视口 或 回滚入视），永不再隐藏
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: el,
-        start: 'top 80%',
-        end: 'top 40%',
-        scrub: 1.5,
-        once: true,
-        onLeave: () => setShowStat(true), // 动画结束后显示数字
+        start: 'top 85%',
+        end: 'top 50%',
+        scrub: 1.2,
+        onEnter: () => setShowStat(true),     // 向下滚入视口即显示数字（提前出现，不必滑很远）
+        onEnterBack: () => setShowStat(true),  // 向上滚回视口内也保持显示（修复「滑到底再上滑 64 消失」）
       },
     })
 
@@ -65,7 +82,7 @@ export default function CircleMatrix({
       duration: 0.08,
       ease: 'power2.out',
       stagger: {
-        amount: 1.2,
+        amount: isMobile ? 0.6 : 1.2,
         from: 'start',
       },
     })
@@ -75,15 +92,15 @@ export default function CircleMatrix({
         if (t.trigger && (t.trigger === el || el.contains(t.trigger))) t.kill()
       })
     }
-  }, [total])
+  }, [cfg.total, cfg.fillCount, isMobile])
 
   return (
-    <div className="circle-matrix" ref={containerRef}>
-      {/* 左侧：圆点矩阵 */}
+    <div className={`circle-matrix${isMobile ? ' circle-matrix--mobile' : ''}`} ref={containerRef}>
+      {/* 左侧/上方：圆点矩阵 */}
       <div
         className="circle-matrix__grid"
         style={{
-          gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          gridTemplateColumns: `repeat(${cfg.columns}, 1fr)`,
         }}
       >
         {circles.map((c) => (
@@ -94,10 +111,10 @@ export default function CircleMatrix({
         ))}
       </div>
 
-      {/* 右侧：数字（动画完成后显示） */}
+      {/* 右侧/下方：数字（动画完成后显示） */}
       <div className={`circle-matrix__stat${showStat ? ' circle-matrix__stat--visible' : ''}`}>
         <span className="circle-matrix__number">
-          {value}<span className="circle-matrix__suffix">{suffix}</span>
+          {cfg.value}<span className="circle-matrix__suffix">{suffix}</span>
         </span>
         {label && <p className="circle-matrix__label">{label}</p>}
       </div>

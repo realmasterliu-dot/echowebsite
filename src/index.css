@@ -9,7 +9,7 @@
 /* ---- @font-face: 江城圆体全系列 ---- */
 @font-face {
   font-family: 'JiangChengRound';
-  src: url('/fonts/jiangcheng-300.ttf') format('truetype');
+  src: url('/fonts/jiangcheng-300.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -17,7 +17,7 @@
 
 @font-face {
   font-family: 'JiangChengRound';
-  src: url('/fonts/jiangcheng-400.ttf') format('truetype');
+  src: url('/fonts/jiangcheng-400.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: 'JiangChengRound';
-  src: url('/fonts/jiangcheng-500.ttf') format('truetype');
+  src: url('/fonts/jiangcheng-500.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -33,7 +33,7 @@
 
 @font-face {
   font-family: 'JiangChengRound';
-  src: url('/fonts/jiangcheng-600.ttf') format('truetype');
+  src: url('/fonts/jiangcheng-600.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -41,7 +41,7 @@
 
 @font-face {
   font-family: 'JiangChengRound';
-  src: url('/fonts/jiangcheng-700.ttf') format('truetype');
+  src: url('/fonts/jiangcheng-700.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

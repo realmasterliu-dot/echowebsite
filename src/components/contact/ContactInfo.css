@@ -152,5 +152,5 @@
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .contact-info { grid-template-columns: 1fr; gap: var(--space-md); }
-  .contact-info__closing { text-align: center; }
+  .contact-info__closing { text-align: left; }   /* 手机端文案左对齐 */
 }

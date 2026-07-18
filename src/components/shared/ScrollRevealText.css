@@ -20,5 +20,5 @@
 /* 每个词/字 — inline-block 让 CSS 控制自然换行，填满整行 */
 .sr-word {
   display: inline-block;
-  will-change: opacity, filter;
+  will-change: opacity, transform;  /* 仅动画 transform/opacity，提示浏览器用合成层，滚动不掉帧 */
 }

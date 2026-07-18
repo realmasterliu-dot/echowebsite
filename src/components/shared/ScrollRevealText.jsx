@@ -43,36 +43,38 @@ export default function ScrollRevealText({
     // 收集本组件创建的 ScrollTrigger，cleanup 时只销毁自己的，避免误杀全站其他动画
     const localTriggers = [];
 
-    // 1) 整段容器微旋转 → 归位
-    //    区间拉长：元素刚进入视口下方即开始，滚到偏上方才完成，动画随滚动缓慢推进
+    // 1) 整段容器微旋转 → 归位（transform 合成，几乎零成本）
+    //    区间缩短：元素刚进入视口即从底部开始，滚到约屏幕 55% 处就完成，
+    //    不必一直滑到顶部才结束（之前 end:'top 15%' 导致要滑过整段才加载完）
     const tRotate = gsap.fromTo(el,
-      { transformOrigin: '0% 50%', rotate: 3 },
+      { transformOrigin: '0% 50%', rotate: 2 },
       {
         rotate: 0,
         ease: 'none',
         scrollTrigger: {
           trigger: el,
-          start: 'top 90%',
-          end: 'top 15%',
+          start: 'top 88%',
+          end: 'top 55%',
           scrub: 1.2,
         }
       }
     );
     if (tRotate.scrollTrigger) localTriggers.push(tRotate.scrollTrigger);
 
-    // 2) 逐词 opacity + blur 同步揭示（合并为一个 tween，减少 ScrollTrigger 数量更顺）
-    //    加大模糊起点(7px)与错开(stagger 0.06)，让"逐词浮现"更舒展、更高级
+    // 2) 逐词 opacity + 位移揭示（仅用 transform/opacity，GPU 合成层，滚动不掉帧）
+    //    注意：曾经用 filter:blur 做"由模糊到清晰"，但 blur 需每帧重绘每个字，
+    //    在手机上极卡（实测 48fps / 最低 10fps）。改为 opacity + 轻微上移，同样优雅但丝滑。
     const tWords = gsap.fromTo(words,
-      { opacity: 0.05, filter: 'blur(7px)' },
+      { opacity: 0.08, y: 16 },
       {
         opacity: 1,
-        filter: 'blur(0px)',
+        y: 0,
         ease: 'none',
         stagger: 0.04,
         scrollTrigger: {
           trigger: el,
-          start: 'top 90%',
-          end: 'top 15%',
+          start: 'top 88%',
+          end: 'top 55%',
           scrub: 1.2,
         }
       }

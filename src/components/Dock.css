@@ -104,40 +104,41 @@
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .dock {
-    bottom: 8px;
+    bottom: 16px;             /* 上提，远离屏幕底边，点击更顺手 */
     left: 50%;
     transform: translateX(-50%);
-    width: auto;           /* 不再撑满，让内容决定宽度 */
-    max-width: 320px;
+    width: auto;              /* 不再撑满，让内容决定宽度 */
+    max-width: 380px;
   }
 
   .dock__inner {
-    border-radius: 22px;
-    padding: 5px;
+    border-radius: 28px;      /* 更大更圆润 */
+    padding: 8px;             /* 加厚内边距，整体更高 */
   }
 
   .dock__track {
-    justify-content: center;   /* 确保内容居中 */
+    justify-content: center;  /* 确保内容居中 */
   }
 
   .dock__item {
-    padding: 8px 12px;         /* 缩小水平内边距，整体更紧凑 */
+    padding: 13px 16px;       /* 明显加大，点击区域更大 */
+    gap: 4px;
   }
 
   .dock__icon {
-    font-size: 1rem;
-    width: 20px;
-    height: 20px;
+    font-size: 1.35rem;       /* 图标更大 */
+    width: 28px;
+    height: 28px;
   }
 
   .dock__label {
-    font-size: 0.52rem;        /* 稍小 */
+    font-size: 0.64rem;       /* 字号加大，更易读 */
   }
 
   /* 点指示器下移，避免与文字重叠 */
   .dock__indicator {
-    bottom: 2px;
-    width: 3px;
-    height: 3px;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
   }
 }
