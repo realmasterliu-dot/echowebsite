@@ -22,7 +22,7 @@ export default function ContactInfo() {
             <div className="contact-info__phones">
               <FontAwesomeIcon icon={['fas', 'phone']} className="contact-info__icon" />
               <span className="contact-info__person">创意总监 卢慧允 KayKay</span>
-              <span className="contact-info__phone">189 0307 3764</span>
+              <span className="contact-info__phone">189 0307 3765</span>
 
               <FontAwesomeIcon icon={['fas', 'phone']} className="contact-info__icon" />
               <span className="contact-info__person">创意总监 刘昊 Leo</span>
