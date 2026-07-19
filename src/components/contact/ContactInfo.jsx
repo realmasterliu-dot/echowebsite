@@ -19,11 +19,6 @@ export default function ContactInfo() {
           </div>
 
           <div className="contact-info__details">
-            <div className="contact-info__item">
-              <FontAwesomeIcon icon={['fas', 'location-dot']} className="contact-info__icon" />
-              <span>{company.address}</span>
-            </div>
-
             <div className="contact-info__phones">
               <FontAwesomeIcon icon={['fas', 'phone']} className="contact-info__icon" />
               <span className="contact-info__person">创意总监 卢慧允 KayKay</span>
