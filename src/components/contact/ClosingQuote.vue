@@ -37,14 +37,15 @@ const titleLines = computed(() => splitLines(props.quote.title))
 }
 
 .closing-quote__title-line {
-  font-size: $fs-3xl;
-  font-weight: $fw-medium;
+  font-size: $fs-2xl;
+  font-weight: $fw-bold;
   color: $color-text;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .closing-quote__content {
   font-size: $fs-md;
+  font-weight: $fw-regular;
   color: $color-text-secondary;
   line-height: 1.8;
 }
@@ -53,5 +54,6 @@ const titleLines = computed(() => splitLines(props.quote.title))
   font-size: $fs-sm;
   color: $color-text-light;
   line-height: 1.7;
+  font-style: italic;
 }
 </style>

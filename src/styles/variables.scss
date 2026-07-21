@@ -26,28 +26,31 @@ $color-text-rgb: 51, 44, 41;
 $color-accent-rgb: 142, 73, 202;
 
 /* ---- Typography ---- */
-/* 品牌字体名保留；小程序端无本地 @font-face，会回退到系统字体 */
+/* 与 H5 variables.css 对齐：江城圆体 + 五档字重 */
 $font-family-brand: 'JiangChengRound', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
   'Noto Sans SC', sans-serif;
 $font-family-base: $font-family-brand;
 $font-family-system: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
 
-/* 字重与 H5 江城圆体五档对齐：300–700 */
+/* 字重 — 对齐 H5 --fw-*（江城圆体最高 700，H5 中 800/900 映射为 bold） */
 $fw-light: 300;
 $fw-regular: 400;
 $fw-medium: 500;
 $fw-semibold: 600;
 $fw-bold: 700;
 
-/* 字号（rpx）— 对应常见 12/14/16/18/20/24/28/32 px */
-$fs-xs: 24rpx;
-$fs-sm: 28rpx;
-$fs-md: 32rpx;
-$fs-lg: 36rpx;
-$fs-xl: 40rpx;
-$fs-2xl: 48rpx;
-$fs-3xl: 56rpx;
-$fs-4xl: 64rpx;
+/* 字号（rpx）— 375 设计稿：1px ≈ 2rpx，1rem ≈ 32rpx */
+$fs-xs: 24rpx; /* 12px */
+$fs-sm: 28rpx; /* 14px */
+$fs-md: 32rpx; /* 16px */
+$fs-lg: 36rpx; /* 18px */
+$fs-xl: 40rpx; /* 20px */
+$fs-2xl: 48rpx; /* 24px */
+$fs-3xl: 56rpx; /* 28px */
+$fs-4xl: 64rpx; /* 32px — CTA 大标题等 */
+$fs-display: 70rpx; /* ≈2.2rem 区块主标题（Company / Business） */
+$fs-stat: 72rpx; /* 统计数字 */
+$fs-stat-xl: 112rpx; /* CircleMatrix 大数字 */
 
 /* ---- Spacing（8pt 体系 → rpx）---- */
 $space-xs: 8rpx;
@@ -66,9 +69,9 @@ $radius-xl: 56rpx;
 $radius-full: 9999rpx;
 
 /* ---- Layout ---- */
-/* 内容区水平内边距：小屏 / 常规 / 宽屏由 mixin 控制 */
-$page-padding-x: 32rpx;
-$page-padding-x-wide: 48rpx;
+/* 内容区水平内边距：20px → 40rpx（750 设计宽，1px = 2rpx） */
+$page-padding-x: 40rpx;
+$page-padding-x-wide: 40rpx;
 $container-max-rpx: 750rpx; /* 小程序单列通常铺满；宽屏可限制 */
 $tabbar-height: 100rpx;
 $nav-bar-height: 88rpx;

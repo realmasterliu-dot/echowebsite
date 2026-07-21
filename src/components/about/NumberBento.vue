@@ -42,8 +42,8 @@ const displayValue = computed(() => String(props.value))
 
 .number-bento__value,
 .number-bento__suffix {
-  font-size: $fs-3xl;
-  font-weight: $fw-medium;
+  font-size: 76rpx;
+  font-weight: $fw-bold;
   color: $color-primary;
   line-height: 1.1;
 }

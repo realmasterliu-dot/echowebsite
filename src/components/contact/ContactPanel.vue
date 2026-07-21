@@ -91,7 +91,7 @@ const onConsult = () => {
 
 .contact-panel__name {
   font-size: $fs-md;
-  font-weight: $fw-medium;
+  font-weight: $fw-bold;
   color: $color-text;
   text-align: center;
 }
@@ -133,7 +133,7 @@ const onConsult = () => {
 
 .contact-panel__number {
   font-size: $fs-xl;
-  font-weight: $fw-medium;
+  font-weight: $fw-semibold;
   color: $color-primary;
 }
 
@@ -169,7 +169,7 @@ const onConsult = () => {
   background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
   color: #fff;
   font-size: $fs-lg;
-  font-weight: $fw-medium;
+  font-weight: $fw-semibold;
 }
 
 .contact-panel__btn-icon {

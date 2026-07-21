@@ -66,15 +66,15 @@ const fallback = computed(() => (props.title || '?').slice(0, 1))
 }
 
 .feature-bento__title {
-  font-size: $fs-lg;
-  font-weight: $fw-medium;
+  font-size: $fs-md;
+  font-weight: $fw-bold;
   color: $color-text;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .feature-bento__desc {
   font-size: $fs-sm;
   color: $color-text-secondary;
-  line-height: 1.65;
+  line-height: 1.55;
 }
 </style>

@@ -1,7 +1,10 @@
 <template>
+  <!--
+    首页 CTA — 对齐 H5 ContactCTA：整块内容 ScrollReveal 进入视口后再出现
+  -->
   <view class="cta">
     <view class="cta__bg" />
-    <FadeIn>
+    <scroll-reveal direction="up" :delay="0.05" :distance="56">
       <view class="cta__content">
         <text class="section-label cta__label">{{ homeCta.label }}</text>
         <view class="cta__title-wrap">
@@ -14,12 +17,12 @@
           <text class="cta__arrow">→</text>
         </button>
       </view>
-    </FadeIn>
+    </scroll-reveal>
   </view>
 </template>
 
 <script setup>
-import FadeIn from '@/components/feedback/FadeIn.vue'
+import ScrollReveal from '@/components/feedback/ScrollReveal.vue'
 import { homeCta } from '@/data/home'
 import { goTab } from '@/services/navigation'
 
@@ -31,8 +34,11 @@ const onConsult = () => {
 <style lang="scss" scoped>
 .cta {
   position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
   padding: $space-2xl $page-padding-x;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .cta__bg {
@@ -72,10 +78,10 @@ const onConsult = () => {
 }
 
 .cta__title {
-  font-size: $fs-3xl;
-  font-weight: $fw-medium;
+  font-size: $fs-4xl;
+  font-weight: $fw-bold;
   color: $color-text;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .cta__title--accent {
@@ -84,6 +90,7 @@ const onConsult = () => {
 
 .cta__desc {
   font-size: $fs-md;
+  font-weight: $fw-regular;
   color: $color-text-secondary;
   line-height: 1.7;
   max-width: 600rpx;
@@ -100,7 +107,7 @@ const onConsult = () => {
   background: transparent;
   color: $color-primary;
   font-size: $fs-lg;
-  font-weight: $fw-medium;
+  font-weight: $fw-semibold;
 }
 
 .cta__btn:active {

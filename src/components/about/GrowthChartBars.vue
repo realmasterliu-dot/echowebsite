@@ -63,8 +63,8 @@ const bars = computed(() => {
 
 .growth-chart__value {
   font-size: $fs-xs;
-  font-weight: $fw-medium;
-  color: $color-text;
+  font-weight: $fw-bold;
+  color: $color-primary;
   text-align: center;
 }
 

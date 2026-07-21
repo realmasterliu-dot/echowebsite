@@ -1,0 +1,57 @@
+---
+description: 微信小程序动效（ScrollReveal / Hero slogan）踩坑与正确写法，写过渡动画时必读
+globs: src/components/**/*.vue,src/components/**/*.js,src/pages/**/*.vue
+alwaysApply: false
+---
+
+# mp-weixin 动效约定（禁止再踩）
+
+本仓库用 CSS/内联过渡替代 H5 GSAP。下列问题会导致「空白占位」或「完全看不到动画」。
+
+## 1. 禁止只靠 class 切换做过渡
+
+微信端 scoped class 的 `transition` + `transform`/`opacity` 经常被跳过。
+
+- 错误：`.foo { opacity:0 }` / `.foo--show { opacity:1 }` 指望能播过渡
+- 正确：用 **inline style** 写 `opacity`、`transform`、`transitionProperty`、`transitionDuration`、`transitionDelay`（参考 `ScrollReveal.vue`、`HeroSection.vue`）
+
+## 2. 必须先绘制隐藏态，再开 transition，再显示
+
+同一帧从无样式直接到显示态 = 无动画；若一直停在隐藏态 = 空白。
+
+顺序：
+
+1. 初始：`opacity:0` / `translate3d(...)`，且 `transitionProperty: 'none'`（`ready=false`）
+2. `nextTick` + 短 `setTimeout` 后：`ready=true`（打开 transition）
+3. 再短延迟后：`visible/play=true`
+
+## 3. transform 用 px，不用 % / CSS 变量
+
+- 避免 `translateY(112%)`、`var(--sr-distance)`（解析失败或无效）
+- 使用 `translate3d(0, 48px, 0)` 等 **px** 值
+
+## 4. 滚动触发：页面必须声明 `onPageScroll`
+
+子组件里的 `onPageScroll` **不会触发**，除非页面源码里也有 `onPageScroll`（可为 `onPageScroll(() => {})`）。
+
+首页已声明：`src/pages/home/index.vue`。其它页若用 `ScrollReveal` / `useInViewOnce`，同样要声明。
+
+优先复用：`src/components/feedback/useInViewOnce.js`（观察器 + query + 轮询 + 超时兜底，避免永久空白）。
+
+## 5. IntersectionObserver 注意点
+
+- 不要观察**自定义组件根节点**（查不到自身），观察内部 `.xxx__target`
+- 优先 `proxy.$scope.createIntersectionObserver`（微信组件实例）
+- `relativeToViewport({ bottom: 正数 })` 会**提前**触发；要对齐「滑到再播」用负的 bottom（屏高比例）
+
+## 6. 组件命名与产物
+
+- 避免随意改名/删除已编译过的组件路径（如 `ScrollRevealText` / `FadeIn`），开发者工具会缓存旧路径 → `ENOENT`
+- 改名后：清缓存、重新编译；必要时保留原文件名
+- 若组件源码仍在但已无引用，uni 不会打进 `dist`，缓存仍会 ENOENT → 在仍编译的页面用 `v-if="false"` 保留进图，或清缓存后重编
+
+## 参考实现
+
+- 滚动揭示：`feedback/ScrollReveal.vue` + `useInViewOnce.js`
+- 逐字滚动 scrub：`feedback/ScrollRevealText.vue`（对齐 H5：top 88%→55%，scrub 追赶，非打字机）
+- 首屏 slogan 遮罩揭开：`home/HeroSection.vue`（遮罩 `overflow:hidden` + 内联上滑）

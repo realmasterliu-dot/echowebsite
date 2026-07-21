@@ -1,16 +1,16 @@
 /**
  * 静态资源路径常量 — 页面/组件统一引用，避免散落硬编码
- * 对应 src/static 下文件
+ * 对应 src/assets 下文件（构建后位于小程序包 /assets/）
  */
 
 export const images = {
-  logo: '/static/images/logo.png',
-  logoJpg: '/static/images/logo.jpg',
-  logoHorizontal: '/static/images/logo-horizontal.png',
-  mockupIntro: '/static/images/mockup-intro.jpg',
+  logo: '/assets/images/logo.png',
+  logoJpg: '/assets/images/logo.jpg',
+  logoHorizontal: '/assets/images/logo-horizontal.png',
+  mockupIntro: '/assets/images/mockup-intro.jpg',
 }
 
 export const fonts = {
-  regular: '/static/fonts/jiangcheng-400.woff2',
-  medium: '/static/fonts/jiangcheng-500.woff2',
+  regular: '/assets/fonts/jiangcheng-400.woff2',
+  medium: '/assets/fonts/jiangcheng-500.woff2',
 }

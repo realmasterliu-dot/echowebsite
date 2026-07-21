@@ -28,7 +28,6 @@
       "minified": true
     },
     "usingComponents": true,
-    "lazyCodeLoading": "requiredComponents",
     "libVersion": "3.7.9"
   },
   "mp-alipay": {

@@ -44,8 +44,8 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
-const contentDir = path.join(root, 'src/static/icons/content')
-const tabDir = path.join(root, 'src/static/icons/tab')
+const contentDir = path.join(root, 'src/assets/icons/content')
+const tabDir = path.join(root, 'src/assets/icons/tab')
 
 const BRAND = '#FF5500'
 const MUTED = '#999999'

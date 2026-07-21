@@ -1,11 +1,12 @@
-/* 全局基础重置（小程序友好） */
+/* 全局基础重置（小程序友好）— 对齐 H5 index.css body */
 
 page {
   background-color: $color-bg;
   color: $color-text;
   font-family: $font-family-base;
+  font-weight: $fw-regular;
   font-size: $fs-md;
-  line-height: 1.6;
+  line-height: 1.7;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
 }
@@ -21,6 +22,14 @@ textarea {
   box-sizing: border-box;
 }
 
+/* 微信 text 不保证继承 page 字体，显式继承 */
+text,
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
 image {
   display: block;
   max-width: 100%;
@@ -34,6 +43,7 @@ button {
   border-radius: 0;
   line-height: inherit;
   font-size: inherit;
+  font-weight: inherit;
 
   &::after {
     border: none;

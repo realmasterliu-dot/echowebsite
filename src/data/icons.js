@@ -1,10 +1,10 @@
 /**
  * 图标 key → 本地静态资源
- * 约定：PNG 放到 `src/static/icons/content/{iconKey}.png`
+ * 约定：PNG 放到 `src/assets/icons/content/{iconKey}.png`
  * 资源未就绪时 resolveIcon 返回空字符串，UI 可回退为文字/色块
  */
 
-const ICON_DIR = '/static/icons/content'
+const ICON_DIR = '/assets/icons/content'
 
 /** @type {Record<string, string>} */
 export const iconMap = {

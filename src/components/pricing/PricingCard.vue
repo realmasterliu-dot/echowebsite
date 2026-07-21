@@ -92,7 +92,7 @@ const priceText = computed(() => {
   transform: translateX(-50%);
   padding: 8rpx 28rpx 10rpx;
   font-size: $fs-xs;
-  font-weight: $fw-medium;
+  font-weight: $fw-bold;
   letter-spacing: 0.06em;
   color: #fff;
   background: linear-gradient(135deg, $color-primary, $color-primary-dark);
@@ -112,8 +112,8 @@ const priceText = computed(() => {
 }
 
 .price-card__name {
-  font-size: $fs-xl;
-  font-weight: $fw-medium;
+  font-size: $fs-lg;
+  font-weight: $fw-semibold;
   color: $color-text;
   line-height: 1.3;
 }
@@ -131,9 +131,10 @@ const priceText = computed(() => {
 
 .price-card__currency,
 .price-card__amount {
-  font-size: 56rpx;
-  font-weight: $fw-medium;
+  font-size: $fs-3xl;
+  font-weight: $fw-bold;
   color: $color-primary;
+  letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
@@ -144,6 +145,7 @@ const priceText = computed(() => {
 
 .price-card__period {
   font-size: $fs-md;
+  font-weight: $fw-medium;
   color: $color-text-light;
   margin-left: 4rpx;
 }

@@ -47,13 +47,13 @@ const displayValue = computed(() => {
 }
 
 .stat-number__value {
-  font-weight: $fw-medium;
+  font-weight: $fw-bold;
   color: $color-primary;
   line-height: 1.1;
 }
 
 .stat-number__suffix {
-  font-weight: $fw-medium;
+  font-weight: $fw-semibold;
   color: $color-primary;
 }
 
@@ -75,6 +75,6 @@ const displayValue = computed(() => {
 
 .stat-number--lg .stat-number__value,
 .stat-number--lg .stat-number__suffix {
-  font-size: 72rpx;
+  font-size: $fs-stat;
 }
 </style>

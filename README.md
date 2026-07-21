@@ -43,7 +43,7 @@ npm run build:mp-weixin
 | `src/services/`   | 拨号、跳转、分享等能力          |
 | `src/utils/`      | 纯工具 / 系统信息 / 响应式      |
 | `src/styles/`     | 设计 Token、mixin、响应式工具类 |
-| `src/static/`     | 图片、Tab 图标、字体            |
+| `src/assets/`     | 图片、Tab 图标、字体            |
 | `docs/`           | 迁移方案等文档                  |
 
 ## 响应式说明
@@ -54,7 +54,7 @@ npm run build:mp-weixin
 
 ## 静态资源与字体
 
-- 图片：`src/static/images/`（logo / mockup），路径常量见 `src/data/assets.js`
+- 图片：`src/assets/images/`（logo / mockup），路径常量见 `src/data/assets.js`（运行时 `/assets/...`）
 - 字体策略：仅嵌入江城圆体 **400 + 500**（约 270KB），声明见 `src/styles/fonts.scss`
 - 关闭品牌字体：见 `config.js` → `SWITCH.USE_BRAND_FONT` 说明
 

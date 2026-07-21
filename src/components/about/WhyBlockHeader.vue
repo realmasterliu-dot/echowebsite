@@ -31,16 +31,16 @@ defineProps({
 
 .why-header__label {
   font-size: $fs-xs;
-  font-weight: $fw-medium;
-  letter-spacing: 0.2em;
+  font-weight: $fw-bold;
+  letter-spacing: 0.25em;
   color: $color-primary;
 }
 
 .why-header__title {
   font-size: $fs-3xl;
-  font-weight: $fw-medium;
+  font-weight: $fw-bold;
   color: $color-text;
-  line-height: 1.25;
+  line-height: 1.2;
   max-width: 560rpx;
 }
 </style>

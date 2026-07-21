@@ -63,9 +63,9 @@ defineProps({
 
 .why-local__subheading {
   font-size: $fs-xl;
-  font-weight: $fw-medium;
-  color: $color-text;
-  line-height: 1.4;
+  font-weight: $fw-bold;
+  color: $color-accent;
+  line-height: 1.35;
 }
 
 .why-local__grid {

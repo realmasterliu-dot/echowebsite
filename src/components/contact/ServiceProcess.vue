@@ -54,8 +54,8 @@ function padStep(step) {
   width: 56rpx;
   flex-shrink: 0;
   padding-top: $space-md;
-  font-size: $fs-lg;
-  font-weight: $fw-medium;
+  font-size: $fs-md;
+  font-weight: $fw-bold;
   color: $color-primary;
   letter-spacing: 0.04em;
 }
@@ -101,8 +101,8 @@ function padStep(step) {
 }
 
 .stepper-bento__title {
-  font-size: $fs-lg;
-  font-weight: $fw-medium;
+  font-size: $fs-md;
+  font-weight: $fw-bold;
   color: $color-text;
   line-height: 1.35;
 }
@@ -110,6 +110,6 @@ function padStep(step) {
 .stepper-bento__desc {
   font-size: $fs-sm;
   color: $color-text-secondary;
-  line-height: 1.65;
+  line-height: 1.55;
 }
 </style>

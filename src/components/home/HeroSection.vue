@@ -1,26 +1,32 @@
 <template>
   <!--
-    Hero 首屏层级方案（微信现行推荐）：
-    - type="2d" canvas 默认「同层渲染」→ 可用普通 view 覆盖，cover-view 会失效
-    - canvas 与文案同父平级；文案用相对定位 + 更高 z-index
+    Hero slogan 遮罩揭开 — 对齐 H5 GSAP
+    微信端：内联 opacity/transform（同 ScrollReveal），先绘制隐藏态再开 transition
   -->
-  <view class="hero">
+  <view class="hero" :class="{ 'hero--settle': settle }">
     <canvas
       :id="canvasId"
       class="hero__canvas"
       type="2d"
       :style="canvasStyle"
     />
-    <view class="hero__content">
+    <view class="hero__content" :style="contentStyle">
       <view class="hero__slogan">
-        <text class="hero__line hero__line--kicker">{{ heroSlogan.kicker }}</text>
+        <view class="hero__line">
+          <view class="hero__line-inner" :style="lineStyle(0, true)">
+            <text class="hero__line-text">{{ heroSlogan.kicker }}</text>
+          </view>
+        </view>
+
         <view
           v-for="(line, i) in heroSlogan.lines"
           :key="i"
           class="hero__line"
         >
-          <text>{{ line.text }}</text>
-          <text v-if="line.accent" class="hero__accent">{{ line.accent }}</text>
+          <view class="hero__line-inner" :style="lineStyle(i + 1, false)">
+            <text class="hero__line-text">{{ line.text }}</text>
+            <text v-if="line.accent" class="hero__line-text hero__accent">{{ line.accent }}</text>
+          </view>
         </view>
       </view>
     </view>
@@ -28,16 +34,48 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
+import { computed, getCurrentInstance, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { createGrainientController } from '@/components/shared/useGrainient.js'
 import { heroSlogan } from '@/data/home'
-import { images } from '@/data/assets'
 
 const canvasId = 'hero-grainient'
 const canvasStyle = ref({
   width: '100%',
   height: '100%',
 })
+
+/** 隐藏态已绘制后才允许 transition，避免跳过动画 */
+const ready = ref(false)
+/** 开始揭开 */
+const play = ref(false)
+const settle = ref(false)
+
+/** 约一行字高（px），对齐 H5 yPercent≈112 */
+const SLIDE_PX = 72
+
+/**
+ * @param {number} index
+ * @param {boolean} isKicker
+ */
+function lineStyle(index, isKicker) {
+  const delayMs = Math.round((0.6 + index * 0.16) * 1000)
+  const shown = play.value
+  return {
+    opacity: isKicker ? (shown ? 1 : 0) : 1,
+    transform: shown ? 'translate3d(0, 0, 0)' : `translate3d(0, ${SLIDE_PX}px, 0)`,
+    transitionProperty: ready.value ? 'opacity, transform' : 'none',
+    transitionDuration: isKicker ? '1150ms, 900ms' : '1150ms',
+    transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+    transitionDelay: shown ? `${delayMs}ms` : '0ms',
+  }
+}
+
+const contentStyle = computed(() => ({
+  transform: settle.value ? 'scale(0.985)' : 'scale(1)',
+  transitionProperty: 'transform',
+  transitionDuration: '120ms',
+  transitionTimingFunction: 'ease-in-out',
+}))
 
 const grainientProps = {
   timeSpeed: 0.55,
@@ -67,12 +105,47 @@ const grainientProps = {
 const instance = getCurrentInstance()
 /** @type {ReturnType<typeof createGrainientController> | null} */
 let controller = null
+let settleTimers = []
 
 function onAppShow() {
   controller?.start()
 }
 function onAppHide() {
   controller?.stop()
+}
+
+function clearSettleTimers() {
+  while (settleTimers.length) {
+    clearTimeout(settleTimers.pop())
+  }
+}
+
+/** 对齐 H5 2.8s 轻微压缩回弹 */
+function playSettle() {
+  clearSettleTimers()
+  settleTimers.push(
+    setTimeout(() => {
+      settle.value = true
+      settleTimers.push(
+        setTimeout(() => {
+          settle.value = false
+        }, 120)
+      )
+    }, 2800)
+  )
+}
+
+function startSloganReveal() {
+  // 同 ScrollReveal：先画隐藏态 → 开 transition → 再 play
+  nextTick(() => {
+    setTimeout(() => {
+      ready.value = true
+      setTimeout(() => {
+        play.value = true
+        playSettle()
+      }, 40)
+    }, 50)
+  })
 }
 
 onMounted(() => {
@@ -90,9 +163,12 @@ onMounted(() => {
   setTimeout(() => controller?.queryAndInit(), 80)
   uni.onAppShow(onAppShow)
   uni.onAppHide(onAppHide)
+
+  startSloganReveal()
 })
 
 onUnmounted(() => {
+  clearSettleTimers()
   uni.offAppShow(onAppShow)
   uni.offAppHide(onAppHide)
   controller?.destroy()
@@ -103,9 +179,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .hero {
   position: relative;
-  /* 明确高度，避免仅 min-height 时绝对定位子元素百分比高度算成 0 */
   height: 100vh;
-  /* 冲出 PageShell 左右 page-padding，背景/canvas 贴齐屏幕左右边 */
   width: 100vw;
   margin-left: calc(50% - 50vw);
   overflow: hidden;
@@ -129,37 +203,41 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  /* 文案仍保留左右内边距；仅背景全宽 */
   padding: 160rpx $page-padding-x 80rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.hero__logo {
-  height: 88rpx;
-  width: auto;
-  margin-bottom: 48rpx;
+  will-change: transform;
 }
 
 .hero__slogan {
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 10rpx;
 }
 
+/* 遮罩容器：高度固定为行高，裁切上滑文字 */
 .hero__line {
-  color: #ffffff;
-  font-size: 56rpx;
-  font-weight: $fw-medium;
-  line-height: 1.25;
-  margin-bottom: 12rpx;
+  display: block;
+  overflow: hidden;
+  height: 66rpx;
 }
 
-.hero__line--kicker {
-  font-size: 48rpx;
-  margin-bottom: 20rpx;
-  opacity: 0.95;
+.hero__line-inner {
+  display: block;
+  white-space: nowrap;
+  height: 66rpx;
+  will-change: transform, opacity;
+}
+
+.hero__line-text {
+  color: #ffffff;
+  font-size: $fs-3xl;
+  font-weight: $fw-medium;
+  line-height: 66rpx;
+  letter-spacing: -0.02em;
 }
 
 .hero__accent {

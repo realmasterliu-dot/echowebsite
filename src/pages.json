@@ -51,26 +51,26 @@
       {
         "pagePath": "pages/home/index",
         "text": "首页",
-        "iconPath": "static/icons/tab/home.png",
-        "selectedIconPath": "static/icons/tab/home-active.png"
+        "iconPath": "assets/icons/tab/home.png",
+        "selectedIconPath": "assets/icons/tab/home-active.png"
       },
       {
         "pagePath": "pages/about/index",
         "text": "了解更多",
-        "iconPath": "static/icons/tab/about.png",
-        "selectedIconPath": "static/icons/tab/about-active.png"
+        "iconPath": "assets/icons/tab/about.png",
+        "selectedIconPath": "assets/icons/tab/about-active.png"
       },
       {
         "pagePath": "pages/pricing/index",
         "text": "价格",
-        "iconPath": "static/icons/tab/pricing.png",
-        "selectedIconPath": "static/icons/tab/pricing-active.png"
+        "iconPath": "assets/icons/tab/pricing.png",
+        "selectedIconPath": "assets/icons/tab/pricing-active.png"
       },
       {
         "pagePath": "pages/contact/index",
         "text": "联系我们",
-        "iconPath": "static/icons/tab/contact.png",
-        "selectedIconPath": "static/icons/tab/contact-active.png"
+        "iconPath": "assets/icons/tab/contact.png",
+        "selectedIconPath": "assets/icons/tab/contact-active.png"
       }
     ]
   }
