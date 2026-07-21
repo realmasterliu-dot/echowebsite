@@ -1,0 +1,29 @@
+# 依赖与构建产物
+node_modules
+dist
+unpackage
+build
+
+# 锁文件（保持包管理器原样）
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# 小程序 / 本地工具生成
+project.private.config.json
+*.min.js
+*.min.css
+
+# 静态二进制与字体（勿格式化）
+src/static/**/*.png
+src/static/**/*.jpg
+src/static/**/*.jpeg
+src/static/**/*.gif
+src/static/**/*.webp
+src/static/**/*.woff
+src/static/**/*.woff2
+src/static/**/*.ttf
+src/static/**/*.eot
+
+# 文档若需手工排版可忽略；默认仍格式化 md，需要时取消下一行注释
+# docs

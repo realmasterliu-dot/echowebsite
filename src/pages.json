@@ -1,0 +1,77 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "écho 有求必应",
+        "navigationBarBackgroundColor": "#FBFBFB",
+        "navigationBarTextStyle": "black"
+      }
+    },
+    {
+      "path": "pages/about/index",
+      "style": {
+        "navigationBarTitleText": "了解更多",
+        "navigationBarBackgroundColor": "#FBFBFB",
+        "navigationBarTextStyle": "black"
+      }
+    },
+    {
+      "path": "pages/pricing/index",
+      "style": {
+        "navigationBarTitleText": "价格",
+        "navigationBarBackgroundColor": "#FBFBFB",
+        "navigationBarTextStyle": "black"
+      }
+    },
+    {
+      "path": "pages/contact/index",
+      "style": {
+        "navigationBarTitleText": "联系我们",
+        "navigationBarBackgroundColor": "#FBFBFB",
+        "navigationBarTextStyle": "black"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "écho 有求必应",
+    "navigationBarBackgroundColor": "#FBFBFB",
+    "backgroundColor": "#FBFBFB",
+    "backgroundTextStyle": "dark",
+    "backgroundColorTop": "#FBFBFB",
+    "backgroundColorBottom": "#FBFBFB"
+  },
+  "tabBar": {
+    "color": "#8A857F",
+    "selectedColor": "#FF5500",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "static/icons/tab/home.png",
+        "selectedIconPath": "static/icons/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/about/index",
+        "text": "了解更多",
+        "iconPath": "static/icons/tab/about.png",
+        "selectedIconPath": "static/icons/tab/about-active.png"
+      },
+      {
+        "pagePath": "pages/pricing/index",
+        "text": "价格",
+        "iconPath": "static/icons/tab/pricing.png",
+        "selectedIconPath": "static/icons/tab/pricing-active.png"
+      },
+      {
+        "pagePath": "pages/contact/index",
+        "text": "联系我们",
+        "iconPath": "static/icons/tab/contact.png",
+        "selectedIconPath": "static/icons/tab/contact-active.png"
+      }
+    ]
+  }
+}

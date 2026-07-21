@@ -1,0 +1,46 @@
+/* 全局基础重置（小程序友好） */
+
+page {
+  background-color: $color-bg;
+  color: $color-text;
+  font-family: $font-family-base;
+  font-size: $fs-md;
+  line-height: 1.6;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+view,
+text,
+image,
+scroll-view,
+swiper,
+button,
+input,
+textarea {
+  box-sizing: border-box;
+}
+
+image {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  line-height: inherit;
+  font-size: inherit;
+
+  &::after {
+    border: none;
+  }
+}
+
+/* 点击高亮去除 */
+.tap-reset {
+  -webkit-tap-highlight-color: transparent;
+}

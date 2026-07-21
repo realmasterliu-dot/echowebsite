@@ -1,0 +1,56 @@
+/**
+ * 这里是 uni-app 内置样式变量入口（自动注入到 scss）
+ * 品牌 token 覆盖官方默认色，并与 @/styles/variables.scss 保持一致
+ */
+
+@import '@/styles/variables.scss';
+@import '@/styles/mixins.scss';
+
+/* 覆盖 uni 默认主题色，便于三方组件对齐品牌 */
+$uni-color-primary: $color-primary;
+$uni-color-success: #4cd964;
+$uni-color-warning: #f0ad4e;
+$uni-color-error: #dd524d;
+
+$uni-text-color: $color-text;
+$uni-text-color-inverse: #fff;
+$uni-text-color-grey: $color-text-light;
+$uni-text-color-placeholder: $color-text-light;
+$uni-text-color-disable: #c0c0c0;
+
+$uni-bg-color: $color-surface;
+$uni-bg-color-grey: $color-bg-alt;
+$uni-bg-color-hover: darken($color-bg-alt, 2%);
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4);
+
+$uni-border-color: $color-border;
+
+$uni-font-size-sm: 12px;
+$uni-font-size-base: 14px;
+$uni-font-size-lg: 16px;
+
+$uni-img-size-sm: 20px;
+$uni-img-size-base: 26px;
+$uni-img-size-lg: 40px;
+
+$uni-border-radius-sm: 6px;
+$uni-border-radius-base: 12px;
+$uni-border-radius-lg: 20px;
+$uni-border-radius-circle: 50%;
+
+$uni-spacing-row-sm: 5px;
+$uni-spacing-row-base: 10px;
+$uni-spacing-row-lg: 15px;
+
+$uni-spacing-col-sm: 4px;
+$uni-spacing-col-base: 8px;
+$uni-spacing-col-lg: 12px;
+
+$uni-opacity-disabled: 0.3;
+
+$uni-color-title: $color-text;
+$uni-font-size-title: 20px;
+$uni-color-subtitle: $color-text-secondary;
+$uni-font-size-subtitle: 18px;
+$uni-color-paragraph: $color-text-secondary;
+$uni-font-size-paragraph: 15px;

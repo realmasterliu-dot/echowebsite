@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- H5 / 本地预览用；微信小程序构建不依赖本文件作为运行入口 -->
+    <link rel="icon" href="static/logo.svg" />
+
+    <!--
+      动态写入 viewport：
+      - 禁止缩放，适配移动端
+      - 若系统支持 env()/constant()，追加 viewport-fit=cover（刘海屏安全区）
+    -->
+    <script>
+      const coverSupport =
+        'CSS' in window &&
+        typeof CSS.supports === 'function' &&
+        (CSS.supports('top: env(a)') || CSS.supports('top: constant(a)'))
+      document.write(
+        `<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0${
+          coverSupport ? ', viewport-fit=cover' : ''
+        }" />`
+      )
+    </script>
+
+    <!-- 标题可由构建或业务侧覆盖；品牌名见 config.js -->
+    <title></title>
+
+    <!-- uni / Vite 构建占位：预加载资源链接 -->
+    <!--preload-links-->
+    <!-- uni SSR / 应用上下文占位 -->
+    <!--app-context-->
+  </head>
+  <body>
+    <!-- Vue 挂载点；构建时注入应用 HTML 片段 -->
+    <div id="app"><!--app-html--></div>
+    <!-- 应用入口：创建 SSR App（见 src/main.js） -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

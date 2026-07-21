@@ -1,0 +1,65 @@
+/* 响应式工具类 — 配合 utils/system.js 注入的 page 根 class */
+
+/* 默认：常规手机 */
+.page-shell {
+  width: 100%;
+  min-height: 100vh;
+  @include page-padding;
+}
+
+/* 窄屏（≤375 逻辑宽） */
+.is-compact {
+  .page-shell {
+    padding-left: 24rpx;
+    padding-right: 24rpx;
+  }
+
+  .section-title {
+    font-size: $fs-2xl;
+  }
+}
+
+/* 大屏手机 / 平板 */
+.is-wide {
+  .page-shell {
+    padding-left: $page-padding-x-wide;
+    padding-right: $page-padding-x-wide;
+  }
+}
+
+/* 超宽：内容居中限宽（主要服务平板与 H5 预览） */
+.is-tablet {
+  .page-shell__inner {
+    max-width: 960rpx;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.section {
+  @include page-padding-y($space-xl, $space-xl);
+}
+
+.section-label {
+  display: block;
+  font-size: $fs-sm;
+  font-weight: $fw-medium;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $color-primary;
+  margin-bottom: $space-sm;
+}
+
+.section-title {
+  font-size: $fs-3xl;
+  font-weight: $fw-semibold;
+  color: $color-text;
+  line-height: 1.3;
+}
+
+.section-desc {
+  margin-top: $space-sm;
+  font-size: $fs-md;
+  color: $color-text-secondary;
+  line-height: 1.7;
+}
