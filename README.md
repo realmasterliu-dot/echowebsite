@@ -48,9 +48,15 @@ npm run build:mp-weixin
 
 ## 响应式说明
 
-- 布局单位以 **rpx** 为主（750rpx = 屏宽）
+- 布局单位以 **rpx** 为主（微信规定：屏宽 = 750rpx；设计稿按 375px 时，1px ≈ 2rpx）
 - `utils/system.js` 根据窗口宽度划分 `compact / regular / wide / tablet`
 - `PageShell` 自动挂载 `is-compact` / `is-wide` / `is-tablet`，配合 `styles/responsive.scss`
+
+## 静态资源与字体
+
+- 图片：`src/static/images/`（logo / mockup），路径常量见 `src/data/assets.js`
+- 字体策略：仅嵌入江城圆体 **400 + 500**（约 270KB），声明见 `src/styles/fonts.scss`
+- 关闭品牌字体：见 `config.js` → `SWITCH.USE_BRAND_FONT` 说明
 
 ## 文档
 

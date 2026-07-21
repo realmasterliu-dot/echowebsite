@@ -1,17 +1,33 @@
-/** 联系方式与结语 — 电话请保持纯数字供 dial */
+/** 联系方式与结语 — 对齐 H5 ContactInfo；电话保持纯数字供 dial */
+
+export const contactPageHeader = {
+  label: 'CONTACT',
+  title: '联系我们',
+}
+
+export const processPageHeader = {
+  label: 'PROCESS',
+  title: '服务流程',
+}
 
 export const contactPhones = [
   {
-    label: '商务合作',
+    person: '创意总监 卢慧允',
     display: '189 0307 3765',
     number: '18903073765',
   },
   {
-    label: '商务合作',
+    person: '创意总监 刘昊',
     display: '189 2328 2944',
     number: '18923282944',
   },
 ]
+
+export const contactConsult = {
+  buttonText: '拨打咨询',
+  /** 点击「发送咨询」类按钮时默认拨打第一号码 */
+  defaultNumber: '18903073765',
+}
 
 export const closingQuote = {
   title: '任凭风浪起伏\n我们始终在这',

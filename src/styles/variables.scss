@@ -26,8 +26,14 @@ $color-text-rgb: 51, 44, 41;
 $color-accent-rgb: 142, 73, 202;
 
 /* ---- Typography ---- */
-$font-family-base: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+/* 品牌字体名保留；小程序端无本地 @font-face，会回退到系统字体 */
+$font-family-brand: 'JiangChengRound', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+  'Noto Sans SC', sans-serif;
+$font-family-base: $font-family-brand;
+$font-family-system: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
 
+/* 字重与 H5 江城圆体五档对齐：300–700 */
+$fw-light: 300;
 $fw-regular: 400;
 $fw-medium: 500;
 $fw-semibold: 600;

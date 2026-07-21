@@ -1,6 +1,6 @@
 {
   "name": "écho 有求必应",
-  "appid": "",
+  "appid": "wx885b7a004f663f3c",
   "description": "有求必应品牌策划 — 微信小程序",
   "versionName": "0.1.0",
   "versionCode": "100",
@@ -21,14 +21,15 @@
   },
   "quickapp": {},
   "mp-weixin": {
-    "appid": "",
+    "appid": "wx885b7a004f663f3c",
     "setting": {
       "urlCheck": false,
       "es6": true,
       "minified": true
     },
     "usingComponents": true,
-    "lazyCodeLoading": "requiredComponents"
+    "lazyCodeLoading": "requiredComponents",
+    "libVersion": "3.7.9"
   },
   "mp-alipay": {
     "usingComponents": true

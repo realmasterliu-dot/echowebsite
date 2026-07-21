@@ -24,6 +24,7 @@ src/static/**/*.woff
 src/static/**/*.woff2
 src/static/**/*.ttf
 src/static/**/*.eot
+src/static/fonts/jiangcheng-base64.js
 
 # 文档若需手工排版可忽略；默认仍格式化 md，需要时取消下一行注释
 # docs

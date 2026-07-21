@@ -1,0 +1,50 @@
+/**
+ * 品牌自定义字体 — 江城圆体
+ *
+ * - H5：下方 @font-face 本地 woff2（300–700）
+ * - 微信小程序：App.onLaunch → services/fonts.js → loadFontFace(Data URL)，
+ *   见 npm run fonts:encode（含 300/400/500/600/700）
+ */
+
+/* #ifdef H5 */
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/static/fonts/jiangcheng-300.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/static/fonts/jiangcheng-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/static/fonts/jiangcheng-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/static/fonts/jiangcheng-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JiangChengRound';
+  src: url('/static/fonts/jiangcheng-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* #endif */
+

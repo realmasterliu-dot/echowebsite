@@ -1,6 +1,6 @@
 /**
  * 系统信息 / 响应式断点
- * 在 App onLaunch 调用 initSystemInfo，页面通过 getLayoutFlags 取 class
+ * 优先用新 API（getWindowInfo / getDeviceInfo），避免 getSystemInfoSync 弃用告警
  */
 
 /** @typedef {'compact' | 'regular' | 'wide' | 'tablet'} LayoutTier */
@@ -11,16 +11,47 @@ const BP = {
   tablet: 768,
 }
 
-/** @type {UniApp.GetSystemInfoResult | null} */
+/** @type {Record<string, any> | null} */
 let cachedInfo = null
 
 /** @type {LayoutTier} */
 let cachedTier = 'regular'
 
+function safeCall(fn) {
+  try {
+    if (typeof fn === 'function') return fn()
+  } catch (_) {
+    /* ignore */
+  }
+  return null
+}
+
+function readWindowInfo() {
+  const win = safeCall(uni.getWindowInfo)
+  if (win) return win
+  return safeCall(uni.getSystemInfoSync) || {}
+}
+
+function readDeviceInfo() {
+  const device = safeCall(uni.getDeviceInfo)
+  if (device) return device
+  const legacy = safeCall(uni.getSystemInfoSync)
+  return legacy || {}
+}
+
 export function initSystemInfo() {
   try {
-    cachedInfo = uni.getSystemInfoSync()
-    cachedTier = resolveTier(cachedInfo.windowWidth || cachedInfo.screenWidth || 375)
+    const win = readWindowInfo()
+    const device = readDeviceInfo()
+    cachedInfo = {
+      windowWidth: win.windowWidth || 375,
+      windowHeight: win.windowHeight || 667,
+      statusBarHeight: win.statusBarHeight || 20,
+      safeAreaInsets: win.safeAreaInsets || { top: 0, bottom: 0, left: 0, right: 0 },
+      pixelRatio: win.pixelRatio || 2,
+      platform: device.platform || '',
+    }
+    cachedTier = resolveTier(cachedInfo.windowWidth)
   } catch (e) {
     cachedInfo = null
     cachedTier = 'regular'

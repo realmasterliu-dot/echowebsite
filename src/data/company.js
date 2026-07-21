@@ -1,4 +1,4 @@
-/** 品牌基础信息 — 自 H5 content.js 迁入骨架 */
+/** 品牌基础信息 — 自 H5 content.js `company` 迁入 */
 
 export const company = {
   name: '有求必应品牌策划有限公司',

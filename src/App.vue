@@ -1,9 +1,20 @@
 <script setup>
 import { onLaunch, onShow } from '@dcloudio/uni-app'
 import { initSystemInfo } from '@/utils/system'
+import { SWITCH } from '../config.js'
+// #ifdef MP-WEIXIN
+import { loadBrandFonts } from '@/services/fonts.js'
+// 兼容开发者工具偶发查找 services/font.js（单数）
+import '@/services/font.js'
+// #endif
 
 onLaunch(() => {
   initSystemInfo()
+  // #ifdef MP-WEIXIN
+  if (SWITCH.USE_BRAND_FONT) {
+    loadBrandFonts()
+  }
+  // #endif
 })
 
 onShow(() => {
@@ -12,6 +23,8 @@ onShow(() => {
 </script>
 
 <style lang="scss">
+/* 品牌字体须先于 reset，保证 page 继承 JiangChengRound */
+@import '@/styles/fonts.scss';
 @import '@/styles/reset.scss';
 @import '@/styles/responsive.scss';
 @import '@/styles/animations.scss';
