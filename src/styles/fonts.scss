@@ -1,55 +1,10 @@
 /**
- * 品牌自定义字体 — 江城圆体
+ * 品牌字体入口（各端共用的占位说明）
  *
- * - H5：本地 woff2 @font-face
- * - 微信小程序：禁止本地路径；用自动生成的 base64 @font-face（jiangcheng-faces.scss）
- *   不要用 loadFontFace + 超大 Data URL（易卡住无回调）
- *   重新生成：npm run fonts:encode
+ * - H5：见 fonts-h5.scss（App.vue #ifdef H5 引入）
+ * - 微信小程序：禁止在 wxss 写远程 @font-face；
+ *   由 services/fonts.js → uni.loadFontFace 加载整档 woff2
+ *
+ * 注意：不要在本文件写 Zeoseven @import——uni 对 scss 里的 #ifdef 不可靠，
+ * 远程 CSS 会被打进小程序 app.wxss，引发 ERR_CACHE_MISS。
  */
-
-/* #ifdef H5 */
-@font-face {
-  font-family: 'JiangChengRound';
-  src: url('/assets/fonts/jiangcheng-300.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'JiangChengRound';
-  src: url('/assets/fonts/jiangcheng-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'JiangChengRound';
-  src: url('/assets/fonts/jiangcheng-500.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'JiangChengRound';
-  src: url('/assets/fonts/jiangcheng-600.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'JiangChengRound';
-  src: url('/assets/fonts/jiangcheng-700.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-/* #endif */
-
-/* #ifdef MP-WEIXIN */
-@import '@/styles/generated/jiangcheng-faces.scss';
-/* #endif */
-

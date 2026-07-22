@@ -23,7 +23,10 @@ onShow(() => {
 </script>
 
 <style lang="scss">
-/* 品牌字体须先于 reset，保证 page 继承 JiangChengRound */
+/* 品牌字体须先于 reset；H5 用 Zeoseven，小程序用 loadFontFace（勿把远程 CSS 打进 wxss） */
+/* #ifdef H5 */
+@import '@/styles/fonts-h5.scss';
+/* #endif */
 @import '@/styles/fonts.scss';
 @import '@/styles/reset.scss';
 @import '@/styles/responsive.scss';

@@ -1,22 +1,10 @@
-# 静态字体
+# 品牌字体（江城圆体）
 
-## 策略
+完整策略：**[docs/字体CDN策略.md](../../docs/字体CDN策略.md)**
 
-| 项 | 决策 |
+| 端 | 方式 |
 |----|------|
-| 字体 | 江城圆体 `JiangChengRound` |
-| 字重 | **300–700** 五档 |
-| H5 | 本地 woff2 `@font-face` |
-| 微信小程序 | `src/styles/generated/jiangcheng-faces.scss`（`@font-face` + base64） |
-| 已弃用 | `loadFontFace` + 超大 Data URL（会卡住，只有 loading 无回调） |
-
-```bash
-npm run fonts:encode
-```
-
-生成 `styles/generated/jiangcheng-faces.scss`（由 `fonts.scss` 在 MP 下引入）。
-
-## 如何确认
-
-控制台应出现：`[fonts] OK via CSS @font-face ...`  
-对比：临时注释该 import 后看 slogan 差异；以真机为准。
+| H5 | **Zeoseven** `@import`（`fonts-h5.scss`） |
+| 小程序 | `downloadFile`(整档 CDN) → `loadFontFace`(临时路径)；**不用** Zeoseven CSS 分包 |
+| 域名 | downloadFile：`cdn.jsdelivr.net` |
+| 开关 | `SWITCH.USE_BRAND_FONT` |

@@ -1,0 +1,9 @@
+/**
+ * H5 only — Zeoseven FontsAPI（unicode-range 分包）
+ * 由 App.vue 在 #ifdef H5 下引入；切勿在小程序样式里引用。
+ */
+@import url('https://fontsapi.zeoseven.com/59/300w/result.css');
+@import url('https://fontsapi.zeoseven.com/59/400w/result.css');
+@import url('https://fontsapi.zeoseven.com/59/main/result.css');
+@import url('https://fontsapi.zeoseven.com/59/600w/result.css');
+@import url('https://fontsapi.zeoseven.com/59/700w/result.css');

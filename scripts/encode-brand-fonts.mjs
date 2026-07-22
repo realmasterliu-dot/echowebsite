@@ -1,10 +1,7 @@
 /**
- * Encode brand woff2 → base64 for mp-weixin.
- * Outputs:
- *   - jiangcheng-base64.js  (optional JS / debug)
- *   - jiangcheng-faces.scss (@font-face Data URL — 主路径，避免 loadFontFace 卡住)
- *
- * Usage: npm run fonts:encode
+ * [已弃用] 将品牌 woff2 编成 base64 进包。
+ * 现已改走 Zeoseven CDN：npm run fonts:cdn
+ * 保留本脚本仅作应急回退，勿在默认构建路径引用输出物。
  */
 import fs from 'node:fs'
 import path from 'node:path'

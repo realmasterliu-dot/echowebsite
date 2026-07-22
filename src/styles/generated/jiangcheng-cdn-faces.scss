@@ -1,0 +1,4 @@
+/* DEPRECATED — 勿再 @import。Zeoseven 分包写进 wxss 会导致 ERR_CACHE_MISS。
+ * 小程序请用 services/fonts.js → uni.loadFontFace。
+ * 本文件保留空壳，防止旧缓存路径误引用时再次打入数百条 @font-face。
+ */

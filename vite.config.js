@@ -10,11 +10,13 @@ import { APP_TITLE, APP_DESC } from './config.js'
 const srcDir = fileURLToPath(new URL('./src', import.meta.url))
 const assetsSrc = path.join(srcDir, 'assets')
 
-/** mp-weixin 不需要进包的字体产物（主包体积 / 运行时不用文件） */
+/** mp-weixin：字体走 CDN downloadFile，woff2 不必进主包（省 ~690KB） */
 const MP_STRIP_FONT = /\.(woff2)$/i
 const MP_STRIP_NAMES = new Set([
   'jiangcheng-base64.js',
   'jiangcheng-faces.scss',
+  'jiangcheng-mp-faces.scss',
+  'README.md',
 ])
 
 function walkFiles(dir, base = dir, out = []) {
@@ -39,17 +41,19 @@ function shouldSkipForMp(rel, platform) {
 /**
  * 仅当源文件相对目标有变化时才写入，避免每次 HMR 刷新 mtime
  * 导致微信开发者工具整包 assets 重传。
+ * 同时删除目标中源已不存在的孤儿文件（否则已删图仍占包，易触发「图片合计>200KB」）。
  */
 function syncAssetsIncremental(srcRoot, destRoot, platform) {
   const files = walkFiles(srcRoot)
+  const keepRels = new Set()
   let copied = 0
   let skipped = 0
   let omitted = 0
+  let pruned = 0
 
   for (const file of files) {
     if (shouldSkipForMp(file.rel, platform)) {
       omitted += 1
-      // 若旧产物里还有被剥离文件，删掉（只做一次）
       const stale = path.join(destRoot, file.rel)
       if (fs.existsSync(stale)) {
         fs.unlinkSync(stale)
@@ -57,6 +61,8 @@ function syncAssetsIncremental(srcRoot, destRoot, platform) {
       }
       continue
     }
+
+    keepRels.add(file.rel.split(path.sep).join('/'))
 
     const dest = path.join(destRoot, file.rel)
     if (fs.existsSync(dest)) {
@@ -84,7 +90,18 @@ function syncAssetsIncremental(srcRoot, destRoot, platform) {
     copied += 1
   }
 
-  return { copied, skipped, omitted }
+  // 清理源侧已删除、或 mp 应剥离但仍留在 dest 的文件
+  for (const destFile of walkFiles(destRoot)) {
+    const relKey = destFile.rel.split(path.sep).join('/')
+    const shouldDrop =
+      !keepRels.has(relKey) || shouldSkipForMp(destFile.rel, platform)
+    if (!shouldDrop) continue
+    fs.unlinkSync(destFile.full)
+    pruned += 1
+    console.log('[prune-assets]', relKey)
+  }
+
+  return { copied, skipped, omitted, pruned }
 }
 
 /**
@@ -104,16 +121,17 @@ function copySrcAssetsAndStripMpFonts() {
       const dest = path.resolve(`dist/${mode}/${platform}/assets`)
       fs.mkdirSync(dest, { recursive: true })
 
-      const { copied, skipped, omitted } = syncAssetsIncremental(
+      const { copied, skipped, omitted, pruned } = syncAssetsIncremental(
         assetsSrc,
         dest,
         platform
       )
 
-      if (copied > 0) {
+      if (copied > 0 || pruned > 0) {
         console.log(
           `[copy-assets] ${copied} updated, ${skipped} unchanged` +
             (omitted ? `, ${omitted} skipped(mp fonts)` : '') +
+            (pruned ? `, ${pruned} pruned` : '') +
             ` → ${dest}`
         )
       } else {

@@ -10,10 +10,24 @@ export const APP_DESC = '有求必应品牌策划 — 微信小程序'
 export const SWITCH = {
   WX_SHARE: true,
   /**
-   * 是否使用江城圆体（300–700 五档）。
-   * - H5：fonts.scss 本地 @font-face
-   * - 微信小程序：App.onLaunch → loadFontFace + base64 Data URL（无需 CDN）
-   * 关闭时仅用系统字体栈，可减小主包体积。
+   * 是否使用江城圆体。
+   * - H5：Zeoseven FontsAPI CSS（官方嵌入方式）
+   * - 微信小程序：downloadFile(整档 woff2 CDN) → loadFontFace(临时路径)
+   *   （不能用 Zeoseven CSS 分包；见 docs/字体CDN策略.md）
    */
   USE_BRAND_FONT: true,
+}
+
+/**
+ * 小程序品牌字体
+ * 整档文件与官网 public/fonts 同源；经 jsDelivr 提供 HTTPS + CORS。
+ */
+export const BRAND_FONT = {
+  family: 'JiangChengYuanTi',
+  /** 先正文/标题，再其余 */
+  weights: ['400', '500', '300', '600', '700'],
+  cdnBase:
+    'https://cdn.jsdelivr.net/gh/realmasterliu-dot/echowebsite@main/public/fonts',
+  /** 微信公众平台 → downloadFile 合法域名（不含协议） */
+  downloadFileHost: 'cdn.jsdelivr.net',
 }
