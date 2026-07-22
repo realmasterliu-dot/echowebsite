@@ -1,6 +1,12 @@
 <template>
   <!-- 功能点 / 价值观卡片 — 替代 H5 SpotlightCard + FA 图标 -->
-  <view class="feature-bento" :class="{ 'feature-bento--accent': accent === 'purple' }">
+  <view
+    class="feature-bento"
+    :class="{
+      'feature-bento--accent': accent === 'purple',
+      'feature-bento--stretch': stretch,
+    }"
+  >
     <view class="feature-bento__icon">
       <image v-if="iconSrc" class="feature-bento__icon-img" :src="iconSrc" mode="aspectFit" />
       <text v-else class="feature-bento__icon-fallback">{{ fallback }}</text>
@@ -20,6 +26,8 @@ const props = defineProps({
   iconKey: { type: String, default: '' },
   /** orange | purple — purple 对齐 H5 purpleBentos */
   accent: { type: String, default: 'orange' },
+  /** 撑满父级等高格子 */
+  stretch: { type: Boolean, default: false },
 })
 
 const iconSrc = computed(() => resolveIcon(props.iconKey))
@@ -36,6 +44,11 @@ const fallback = computed(() => (props.title || '?').slice(0, 1))
   border-radius: $radius-md;
   border: 1rpx solid $color-border-light;
   box-sizing: border-box;
+}
+
+.feature-bento--stretch {
+  height: 100%;
+  width: 100%;
 }
 
 .feature-bento__icon {

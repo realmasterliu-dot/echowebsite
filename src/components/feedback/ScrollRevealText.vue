@@ -1,8 +1,8 @@
 <template>
   <!--
-    对齐 H5 ScrollRevealText：滚动 scrub 逐字揭示（非打字机）
-    start: top 88% → end: top 55%，scrub 平滑追赶
-    进度只向前；播完后定格，回滑/再进视口不重播（刷新才重置）
+    滚动 scrub 逐字揭示（对齐 H5 区间）
+    - 进入视口后自动播到结束并定格（不停在半倾斜）
+    - 继续下滑仍可加速追赶；回滑不倒退；刷新才重置
   -->
   <view class="scroll-reveal-text">
     <view class="scroll-reveal-text__target" :style="containerStyle">
@@ -31,17 +31,21 @@ const props = defineProps({
   baseRotation: { type: Number, default: 2 },
   /** 对齐 H5 gsap stagger: 0.04 */
   stagger: { type: Number, default: 0.04 },
-  /** 对齐 H5 scrub: 1.2（秒级滞后平滑，滑快会加速追赶） */
+  /** 进入视口后播完剩余进度的大致时长（秒） */
+  finishDuration: { type: Number, default: 0.85 },
+  /** 滚动超前时的追赶平滑（秒），滑越快追上越多 */
   scrubLag: { type: Number, default: 1.2 },
 })
 
 const instance = getCurrentInstance()
 const ready = ref(false)
-/** 滚动原始进度 0–1（只增不减） */
-const rawProgress = ref(0)
-/** 平滑后的进度（scrub 追赶） */
+/** 滚动给出的下限进度 0–1（只增） */
+const scrubFloor = ref(0)
+/** 实际展示进度 */
 const smoothProgress = ref(0)
-/** 播完后定格，不再响应滚动 */
+/** 已进入视口 → 必须播完 */
+const playToEnd = ref(false)
+/** 播完定格 */
 const settled = ref(false)
 
 let rafTimer = null
@@ -51,7 +55,8 @@ let measuring = false
 function settle() {
   if (settled.value) return
   settled.value = true
-  rawProgress.value = 1
+  playToEnd.value = true
+  scrubFloor.value = 1
   smoothProgress.value = 1
   stopSmooth()
 }
@@ -78,15 +83,21 @@ const tokens = computed(() => {
 
 const charCount = computed(() => tokens.value.filter((t) => !t.space).length)
 
-/**
- * H5：top 88% → 0，top 55% → 1
- */
-function progressFromTop(top, windowHeight) {
+/** H5：top 88% → 0，top 55% → 1 */
+function scrubFromTop(top, windowHeight) {
   const startY = windowHeight * 0.88
   const endY = windowHeight * 0.55
   const range = startY - endY
   if (range <= 0) return top <= endY ? 1 : 0
   return Math.min(1, Math.max(0, (startY - top) / range))
+}
+
+/** 段落与视口有实质交集 → 视为在视口内，应播完 */
+function isInViewport(rect, windowHeight) {
+  if (!rect) return false
+  const topVisible = rect.top < windowHeight * 0.92
+  const bottomVisible = rect.bottom > windowHeight * 0.05
+  return topVisible && bottomVisible
 }
 
 function getWindowHeight() {
@@ -101,10 +112,6 @@ function getWindowHeight() {
   }
 }
 
-/**
- * GSAP stagger + scrub 映射：整段时间轴长度 = 1 + (n-1)*stagger，
- * 字 i 在 [i*stagger, i*stagger+1] 内从 0→1。
- */
 function wordAmount(order, progress) {
   const n = charCount.value
   if (n <= 0) return 1
@@ -153,34 +160,45 @@ function tickSmooth() {
   const dt = lastTickAt ? Math.min(0.064, (now - lastTickAt) / 1000) : 0.016
   lastTickAt = now
 
-  const lag = Math.max(0.05, props.scrubLag)
-  // 近似 GSAP scrub：约 lag 秒追上目标；滑得快时每帧步进更大 → 加速追赶
-  const alpha = 1 - Math.exp(-dt / (lag * 0.35))
-  const next =
-    smoothProgress.value + (rawProgress.value - smoothProgress.value) * alpha
-
-  // 平滑进度也只向前
-  const advanced = Math.max(smoothProgress.value, next)
-  if (advanced >= 0.999) {
-    settle()
+  // 目标：视口内一律冲到 1；滚动 scrub 只提供更高下限（加速）
+  const target = playToEnd.value ? 1 : scrubFloor.value
+  if (target <= smoothProgress.value && !playToEnd.value) {
+    stopSmooth()
     return
   }
 
-  if (Math.abs(advanced - smoothProgress.value) > 0.0005) {
-    smoothProgress.value = advanced
-  } else if (rawProgress.value > smoothProgress.value) {
-    smoothProgress.value = rawProgress.value
+  const remaining = Math.max(0, target - smoothProgress.value)
+  if (remaining < 0.001) {
+    if (target >= 1) settle()
+    else stopSmooth()
+    return
   }
 
-  if (Math.abs(rawProgress.value - smoothProgress.value) < 0.001) {
-    if (rawProgress.value >= 1) {
-      settle()
-      return
-    }
-    if (rawProgress.value <= 0 && smoothProgress.value <= 0) {
-      stopSmooth()
-      return
-    }
+  // 视口内自动收尾：按 finishDuration 匀速走完剩余
+  // 若滚动已超前（scrubFloor 更高），用 scrubLag 更快追上
+  let step
+  if (playToEnd.value) {
+    const autoStep = dt / Math.max(0.2, props.finishDuration)
+    const lag = Math.max(0.05, props.scrubLag)
+    const catchStep =
+      scrubFloor.value > smoothProgress.value
+        ? (scrubFloor.value - smoothProgress.value) *
+          (1 - Math.exp(-dt / (lag * 0.35)))
+        : 0
+    step = Math.max(autoStep, catchStep)
+  } else {
+    const lag = Math.max(0.05, props.scrubLag)
+    step =
+      (scrubFloor.value - smoothProgress.value) *
+      (1 - Math.exp(-dt / (lag * 0.35)))
+  }
+
+  const next = Math.min(1, smoothProgress.value + Math.max(step, 0.0001))
+  smoothProgress.value = next
+
+  if (next >= 0.999) {
+    settle()
+    return
   }
 
   rafTimer = setTimeout(tickSmooth, 16)
@@ -207,21 +225,29 @@ function measure() {
       if (settled.value || !rect) return
       if (!ready.value) ready.value = true
 
-      const p = progressFromTop(rect.top, getWindowHeight())
-      // 只向前：回滑不倒退
-      if (p > rawProgress.value) {
-        rawProgress.value = p
-        if (p >= 0.999) {
+      const wh = getWindowHeight()
+      const scrub = scrubFromTop(rect.top, wh)
+
+      if (scrub > scrubFloor.value) {
+        scrubFloor.value = scrub
+        if (scrub >= 0.999) {
           settle()
           return
         }
+      }
+
+      // 在视口内 → 承诺播完，避免停在半倾斜
+      if (isInViewport(rect, wh) && !playToEnd.value) {
+        playToEnd.value = true
+      }
+
+      if (playToEnd.value || scrubFloor.value > smoothProgress.value) {
         ensureSmoothRunning()
       }
     })
     .exec()
 }
 
-// uni-app：页面已声明 onPageScroll 时，子组件钩子可收到滚动
 onPageScroll(() => {
   measure()
 })

@@ -33,18 +33,17 @@ export function createGrainientController(options) {
   let bufH = 500
 
   function scheduleFrame(cb) {
-    if (displayCanvas && typeof displayCanvas.requestAnimationFrame === 'function') {
-      return displayCanvas.requestAnimationFrame(cb)
-    }
-    return setTimeout(() => cb(Date.now()), 1000 / 30)
+    if (disposed || typeof cb !== 'function') return 0
+    // 部分预览环境 canvas.rAF 会误调到 Window.rAF 且丢回调 → TypeError
+    // 统一用 setTimeout，避免关场销毁时抛错导致 dismiss 发不出
+    return setTimeout(() => {
+      if (disposed || !running) return
+      cb(Date.now())
+    }, 1000 / 30)
   }
 
   function cancelFrame(id) {
-    if (displayCanvas && typeof displayCanvas.cancelAnimationFrame === 'function') {
-      displayCanvas.cancelAnimationFrame(id)
-    } else {
-      clearTimeout(id)
-    }
+    if (id) clearTimeout(id)
   }
 
   function syncGlProps() {
@@ -94,21 +93,29 @@ export function createGrainientController(options) {
     if (!t0) t0 = t
     const timeSec = (t - t0) * 0.001
 
-    if (mode === 'webgl-blit' && glRenderer && ctx2d && offscreen) {
-      glRenderer.draw(timeSec)
-      try {
-        ctx2d.clearRect(0, 0, bufW, bufH)
-        ctx2d.drawImage(offscreen, 0, 0, bufW, bufH)
-      } catch (_) {
-        mode = 'css2d'
-        onFallback?.(true)
+    try {
+      if (mode === 'webgl-blit' && glRenderer && ctx2d && offscreen) {
+        glRenderer.draw(timeSec)
+        try {
+          ctx2d.clearRect(0, 0, bufW, bufH)
+          ctx2d.drawImage(offscreen, 0, 0, bufW, bufH)
+        } catch (_) {
+          mode = 'css2d'
+          onFallback?.(true)
+          drawCss2d(timeSec)
+        }
+      } else if (mode === 'css2d') {
         drawCss2d(timeSec)
       }
-    } else if (mode === 'css2d') {
-      drawCss2d(timeSec)
+    } catch (err) {
+      console.warn('[Grainient] frame error', err)
+      running = false
+      return
     }
 
-    raf = scheduleFrame(loop)
+    if (running && !disposed) {
+      raf = scheduleFrame(loop)
+    }
   }
 
   function start() {

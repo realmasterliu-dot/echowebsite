@@ -5,11 +5,6 @@ export const contactPageHeader = {
   title: '联系我们',
 }
 
-export const processPageHeader = {
-  label: 'PROCESS',
-  title: '服务流程',
-}
-
 export const contactPhones = [
   {
     person: '创意总监 卢慧允',

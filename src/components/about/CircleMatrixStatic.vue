@@ -31,7 +31,8 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
+import { useInViewOnce } from '@/components/feedback/useInViewOnce.js'
 
 const props = defineProps({
   value: { type: Number, default: 64 },
@@ -44,13 +45,11 @@ const props = defineProps({
   compact: { type: Boolean, default: true },
 })
 
-const instance = getCurrentInstance()
 const active = ref(false)
 const showStat = ref(false)
 /** 已点亮的 fill 数量（仅 filled 点参与） */
 const litCount = ref(0)
 
-let observer = null
 const timers = []
 
 // 对齐 H5：手机端 { total: 10, fillCount: 6, columns: 5, value: 64 }
@@ -72,7 +71,6 @@ const circles = computed(() =>
     return {
       id: i,
       filled,
-      // 仅 fill 点按顺序点亮；empty 永不 lit
       lit: filled && i < litCount.value,
     }
   })
@@ -88,7 +86,7 @@ function clearTimers() {
   }
 }
 
-/** 对齐 H5 gsap stagger：只动画 .circle-matrix__dot--fill */
+/** 对齐 H5 gsap stagger：只动画 fill 点 */
 function lightFills() {
   clearTimers()
   litCount.value = 0
@@ -111,34 +109,14 @@ function play() {
   lightFills()
 }
 
-watch(
-  () => [cfg.value.total, cfg.value.fillCount],
-  () => {
-    if (active.value) lightFills()
-  }
-)
-
-onMounted(() => {
-  const proxy = instance?.proxy
-  if (!proxy) {
-    play()
-    return
-  }
-  // 对齐 H5 ScrollTrigger start: 'top 85%'
-  observer = uni.createIntersectionObserver(proxy, { thresholds: [0, 0.2] })
-  observer.relativeToViewport({ bottom: 0 }).observe('.circle-matrix', (res) => {
-    if (res.intersectionRatio > 0) {
-      play()
-      observer?.disconnect()
-      observer = null
-    }
-  })
+useInViewOnce({
+  selector: '.circle-matrix__grid',
+  triggerRatio: 0.85,
+  onEnter: () => play(),
 })
 
 onUnmounted(() => {
   clearTimers()
-  observer?.disconnect()
-  observer = null
 })
 </script>
 

@@ -5,6 +5,10 @@
   width: 100%;
   min-height: 100vh;
   @include page-padding;
+  /* 悬浮毛玻璃 Dock 避让 */
+  padding-bottom: calc(#{$dock-clearance} + constant(safe-area-inset-bottom));
+  padding-bottom: calc(#{$dock-clearance} + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 /* 窄屏（≤375 逻辑宽） */

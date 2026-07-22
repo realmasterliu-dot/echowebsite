@@ -9,9 +9,15 @@ import { onPageScroll } from '@dcloudio/uni-app'
  * @param {object} options
  * @param {string} options.selector
  * @param {number} [options.triggerRatio=0.85]
+ * @param {number} [options.fallbackMs=8000] 超时强制触发，避免永久不播
  * @param {() => void} options.onEnter
  */
-export function useInViewOnce({ selector, triggerRatio = 0.85, onEnter }) {
+export function useInViewOnce({
+  selector,
+  triggerRatio = 0.85,
+  fallbackMs = 8000,
+  onEnter,
+}) {
   const entered = ref(false)
   const instance = getCurrentInstance()
   let observer = null
@@ -132,7 +138,7 @@ export function useInViewOnce({ selector, triggerRatio = 0.85, onEnter }) {
       // Hard fallback: never leave content blank forever
       setTimeout(() => {
         if (!entered.value) enter()
-      }, 8000)
+      }, Math.max(300, fallbackMs))
     })
   })
 

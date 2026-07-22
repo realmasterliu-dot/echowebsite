@@ -1,9 +1,18 @@
 <template>
   <!--
-    Hero slogan 遮罩揭开 — 对齐 H5 GSAP
-    微信端：内联 opacity/transform（同 ScrollReveal），先绘制隐藏态再开 transition
+    一次性开场层 — canvas + slogan
+    点击或上下滑关闭 → 卸载；当次进入小程序不再出现
   -->
-  <view class="hero" :class="{ 'hero--settle': settle }">
+  <view
+    class="hero"
+    :class="{ 'hero--leaving': leaving }"
+    :style="rootStyle"
+    @tap="onTap"
+    @touchstart="onTouchStart"
+    @touchend="onTouchEnd"
+    @touchcancel="onTouchEnd"
+    @touchmove.stop.prevent="onTouchMove"
+  >
     <canvas
       :id="canvasId"
       class="hero__canvas"
@@ -29,6 +38,8 @@
           </view>
         </view>
       </view>
+
+      <text class="hero__hint" :style="hintStyle">点击或上滑继续</text>
     </view>
   </view>
 </template>
@@ -38,25 +49,32 @@ import { computed, getCurrentInstance, nextTick, onMounted, onUnmounted, ref } f
 import { createGrainientController } from '@/components/shared/useGrainient.js'
 import { heroSlogan } from '@/data/home'
 
+const emit = defineEmits(['dismiss', 'gone'])
+
 const canvasId = 'hero-grainient'
 const canvasStyle = ref({
   width: '100%',
   height: '100%',
 })
 
-/** 隐藏态已绘制后才允许 transition，避免跳过动画 */
 const ready = ref(false)
-/** 开始揭开 */
 const play = ref(false)
 const settle = ref(false)
+const leaving = ref(false)
+const canDismiss = ref(false)
 
 /** 约一行字高（px），对齐 H5 yPercent≈112 */
 const SLIDE_PX = 72
+/** 开场最少展示后再允许关闭 */
+const DISMISS_LOCK_MS = 900
+const SWIPE_THRESHOLD = 56
 
-/**
- * @param {number} index
- * @param {boolean} isKicker
- */
+const touchStartY = ref(0)
+let settleTimers = []
+let lockTimer = null
+let leaveTimer = null
+let dismissed = false
+
 function lineStyle(index, isKicker) {
   const delayMs = Math.round((0.6 + index * 0.16) * 1000)
   const shown = play.value
@@ -70,11 +88,25 @@ function lineStyle(index, isKicker) {
   }
 }
 
+const rootStyle = computed(() => ({
+  opacity: leaving.value ? 0 : 1,
+  transform: leaving.value ? 'translate3d(0, -24px, 0)' : 'translate3d(0, 0, 0)',
+  transitionProperty: 'opacity, transform',
+  transitionDuration: '420ms',
+  transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+}))
+
 const contentStyle = computed(() => ({
   transform: settle.value ? 'scale(0.985)' : 'scale(1)',
   transitionProperty: 'transform',
   transitionDuration: '120ms',
   transitionTimingFunction: 'ease-in-out',
+}))
+
+const hintStyle = computed(() => ({
+  opacity: canDismiss.value && !leaving.value ? 0.85 : 0,
+  transitionProperty: 'opacity',
+  transitionDuration: '400ms',
 }))
 
 const grainientProps = {
@@ -105,10 +137,9 @@ const grainientProps = {
 const instance = getCurrentInstance()
 /** @type {ReturnType<typeof createGrainientController> | null} */
 let controller = null
-let settleTimers = []
 
 function onAppShow() {
-  controller?.start()
+  if (!leaving.value) controller?.start()
 }
 function onAppHide() {
   controller?.stop()
@@ -120,7 +151,6 @@ function clearSettleTimers() {
   }
 }
 
-/** 对齐 H5 2.8s 轻微压缩回弹 */
 function playSettle() {
   clearSettleTimers()
   settleTimers.push(
@@ -136,7 +166,6 @@ function playSettle() {
 }
 
 function startSloganReveal() {
-  // 同 ScrollReveal：先画隐藏态 → 开 transition → 再 play
   nextTick(() => {
     setTimeout(() => {
       ready.value = true
@@ -146,6 +175,53 @@ function startSloganReveal() {
       }, 40)
     }, 50)
   })
+}
+
+function dismiss() {
+  if (dismissed || !canDismiss.value || leaving.value) return
+  dismissed = true
+  leaving.value = true
+
+  // 先通知父级挂载正文，避免销毁动画抛错时页面空白
+  emit('dismiss')
+
+  try {
+    controller?.stop()
+  } catch {
+    // ignore
+  }
+
+  leaveTimer = setTimeout(() => {
+    try {
+      controller?.destroy()
+    } catch {
+      // ignore
+    }
+    controller = null
+    emit('gone')
+  }, 430)
+}
+
+function onTap() {
+  dismiss()
+}
+
+function onTouchStart(e) {
+  const t = e.changedTouches?.[0] || e.touches?.[0]
+  touchStartY.value = t ? t.clientY : 0
+}
+
+function onTouchMove() {
+  // stop.prevent：开场层期间不带动底层页面滚动
+}
+
+function onTouchEnd(e) {
+  const t = e.changedTouches?.[0]
+  if (!t) return
+  const dy = t.clientY - touchStartY.value
+  if (Math.abs(dy) >= SWIPE_THRESHOLD) {
+    dismiss()
+  }
 }
 
 onMounted(() => {
@@ -165,10 +241,15 @@ onMounted(() => {
   uni.onAppHide(onAppHide)
 
   startSloganReveal()
+  lockTimer = setTimeout(() => {
+    canDismiss.value = true
+  }, DISMISS_LOCK_MS)
 })
 
 onUnmounted(() => {
   clearSettleTimers()
+  if (lockTimer) clearTimeout(lockTimer)
+  if (leaveTimer) clearTimeout(leaveTimer)
   uni.offAppShow(onAppShow)
   uni.offAppHide(onAppHide)
   controller?.destroy()
@@ -178,10 +259,14 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .hero {
-  position: relative;
-  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
   width: 100vw;
-  margin-left: calc(50% - 50vw);
+  height: 100vh;
   overflow: hidden;
   background: linear-gradient(145deg, #ff8200 0%, #ff5500 42%, #fbfbfb 100%);
 }
@@ -203,7 +288,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 160rpx $page-padding-x 80rpx;
+  padding: 160rpx $page-padding-x 120rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -218,7 +303,6 @@ onUnmounted(() => {
   gap: 10rpx;
 }
 
-/* 遮罩容器：高度固定为行高，裁切上滑文字 */
 .hero__line {
   display: block;
   overflow: hidden;
@@ -242,5 +326,19 @@ onUnmounted(() => {
 
 .hero__accent {
   color: #ffffff;
+}
+
+.hero__hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(48rpx + constant(safe-area-inset-bottom));
+  bottom: calc(48rpx + env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: $fs-xs;
+  font-weight: $fw-medium;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.88);
+  pointer-events: none;
 }
 </style>

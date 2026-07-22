@@ -1,19 +1,23 @@
 <template>
   <!--
-    静态大数字 — 对应 H5 CountUp（首期不做滚动动画）
-    后续若需动效可替换为 CountUp 组件，props 保持兼容
+    大数字 — 对齐 H5 CountUp
+    countUp：进入视口后从 0 滚到目标
+    未开播前显示终值（避免长时间停在 0.0%）
   -->
   <view class="stat-number" :class="[`stat-number--${size}`]">
-    <view class="stat-number__value-row">
-      <text class="stat-number__value">{{ displayValue }}</text>
-      <text v-if="suffix" class="stat-number__suffix">{{ suffix }}</text>
+    <view class="stat-number__target">
+      <view class="stat-number__value-row">
+        <text class="stat-number__value">{{ displayValue }}</text>
+        <text v-if="suffix" class="stat-number__suffix">{{ suffix }}</text>
+      </view>
+      <text v-if="label" class="stat-number__label">{{ label }}</text>
     </view>
-    <text v-if="label" class="stat-number__label">{{ label }}</text>
   </view>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
+import { useInViewOnce } from '@/components/feedback/useInViewOnce.js'
 
 const props = defineProps({
   value: { type: [Number, String], required: true },
@@ -22,14 +26,81 @@ const props = defineProps({
   decimals: { type: Number, default: 0 },
   /** sm | md | lg */
   size: { type: String, default: 'md' },
+  /** 对齐 H5 CountUp：视口内数字滚动 */
+  countUp: { type: Boolean, default: false },
+  duration: { type: Number, default: 2000 },
 })
 
-const displayValue = computed(() => {
-  if (typeof props.value === 'string') return props.value
+const current = ref(0)
+const started = ref(false)
+let tickTimer = null
+
+const numericTarget = computed(() => {
+  if (typeof props.value === 'number') return props.value
   const n = Number(props.value)
-  if (Number.isNaN(n)) return String(props.value)
-  return props.decimals > 0 ? n.toFixed(props.decimals) : String(Math.round(n))
+  return Number.isFinite(n) ? n : null
 })
+
+function formatNum(n) {
+  if (props.decimals > 0) return Number(n).toFixed(props.decimals)
+  return String(Math.round(n))
+}
+
+const displayValue = computed(() => {
+  if (!props.countUp || numericTarget.value == null) {
+    if (typeof props.value === 'string') return props.value
+    const n = Number(props.value)
+    if (Number.isNaN(n)) return String(props.value)
+    return formatNum(n)
+  }
+  // 未开始：显示终值，避免进页/等待触发时停在 0.0%
+  if (!started.value) return formatNum(numericTarget.value)
+  return formatNum(current.value)
+})
+
+function easeOutExpo(t) {
+  return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t)
+}
+
+function stopTick() {
+  if (tickTimer) {
+    clearTimeout(tickTimer)
+    tickTimer = null
+  }
+}
+
+function runCountUp() {
+  const target = numericTarget.value
+  if (!props.countUp || target == null || started.value) return
+  started.value = true
+  current.value = 0
+  stopTick()
+
+  const startAt = Date.now()
+  const duration = Math.max(200, props.duration)
+
+  const step = () => {
+    const t = Math.min(1, (Date.now() - startAt) / duration)
+    current.value = easeOutExpo(t) * target
+    if (t < 1) {
+      tickTimer = setTimeout(step, 16)
+    } else {
+      current.value = target
+      tickTimer = null
+    }
+  }
+  step()
+}
+
+useInViewOnce({
+  selector: '.stat-number__target',
+  // 更早触发：顶边到视口约 95% 高度即开播（原 0.7 偏晚）
+  triggerRatio: 0.95,
+  fallbackMs: 1200,
+  onEnter: () => runCountUp(),
+})
+
+onUnmounted(() => stopTick())
 </script>
 
 <style lang="scss" scoped>

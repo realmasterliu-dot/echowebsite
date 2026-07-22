@@ -14,10 +14,9 @@ export {
   contactPhones,
   closingQuote,
   contactPageHeader,
-  processPageHeader,
   contactConsult,
 } from './contact'
-export { pricingPageHeader } from './pricingPage'
+export { pricingPageHeader, processPageHeader } from './pricingPage'
 export { tabList } from './nav'
 export { iconMap, resolveIcon } from './icons'
 export { images, fonts } from './assets'

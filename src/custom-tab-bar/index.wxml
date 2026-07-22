@@ -1,0 +1,29 @@
+<!-- 对齐 H5 Dock；开场 hidden；下滑 collapsed 向下收起 -->
+<view
+  wx:if="{{!hidden}}"
+  class="dock {{collapsed ? 'dock--collapsed' : ''}}"
+>
+  <view class="dock__inner">
+    <view class="dock__track">
+      <view
+        wx:for="{{list}}"
+        wx:key="pagePath"
+        class="dock__item {{selected === index ? 'dock__item--active' : ''}}"
+        data-path="{{item.pagePath}}"
+        data-index="{{index}}"
+        bindtap="switchTab"
+      >
+        <image
+          class="dock__icon"
+          src="{{selected === index ? item.selectedIconPath : item.iconPath}}"
+          mode="aspectFit"
+        />
+        <text
+          class="dock__label"
+          style="color: {{selected === index ? selectedColor : color}};"
+        >{{item.text}}</text>
+        <view wx:if="{{selected === index}}" class="dock__indicator" />
+      </view>
+    </view>
+  </view>
+</view>

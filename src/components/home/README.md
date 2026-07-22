@@ -6,7 +6,7 @@
 
 | 组件 | 动效（对齐 H5） |
 |------|------------------|
-| `HeroSection.vue` | slogan 遮罩揭开 + stagger（入场 once） |
+| `HeroSection.vue` | 一次性开场层（canvas + slogan；点/滑关闭后卸载） |
 | `CompanyIntro.vue` | ScrollReveal + ScrollRevealText |
 | `BusinessIntro.vue` | 标题 / 卡片 ScrollReveal（stagger 0.05） |
 | `ContactCta.vue` | 整块 ScrollReveal 进入视口 |

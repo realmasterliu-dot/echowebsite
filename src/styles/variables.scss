@@ -74,6 +74,8 @@ $page-padding-x: 40rpx;
 $page-padding-x-wide: 40rpx;
 $container-max-rpx: 750rpx; /* 小程序单列通常铺满；宽屏可限制 */
 $tabbar-height: 100rpx;
+/* 悬浮 Dock 预留：栏高 + 底边距 + 安全区（页面内容勿被挡住） */
+$dock-clearance: 160rpx;
 $nav-bar-height: 88rpx;
 
 /* ---- Shadow ---- */
