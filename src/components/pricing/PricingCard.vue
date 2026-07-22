@@ -15,7 +15,7 @@
       </view>
     </view>
 
-    <text class="price-card__desc">{{ plan.description }}</text>
+    <view class="price-card__desc">{{ plan.description }}</view>
 
     <view class="price-card__features">
       <block v-for="(f, i) in plan.features" :key="i">
@@ -155,9 +155,15 @@ const priceText = computed(() => {
 }
 
 .price-card__desc {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   font-size: $fs-sm;
   color: $color-text-secondary;
   line-height: 1.65;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .price-card--dark .price-card__desc {

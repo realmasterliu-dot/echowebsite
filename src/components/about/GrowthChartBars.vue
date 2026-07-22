@@ -140,7 +140,7 @@ displayTexts.value = (props.data || []).map((d) => d.display || `${d.value}`)
 
 useInViewOnce({
   selector: '.growth-chart__target',
-  triggerRatio: 0.75,
+  triggerRatio: 0.88,
   onEnter: () => play(),
 })
 

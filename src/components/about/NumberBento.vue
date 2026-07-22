@@ -84,8 +84,8 @@ function runCountUp() {
 
 useInViewOnce({
   selector: '.number-bento__target',
-  triggerRatio: 0.95,
-  fallbackMs: 1200,
+  triggerRatio: 0.88,
+  fallbackMs: 20000,
   onEnter: () => runCountUp(),
 })
 

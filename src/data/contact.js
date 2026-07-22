@@ -19,8 +19,8 @@ export const contactPhones = [
 ]
 
 export const contactConsult = {
-  buttonText: '拨打咨询',
-  /** 点击「发送咨询」类按钮时默认拨打第一号码 */
+  buttonText: '发送咨询',
+  /** 点击咨询按钮时默认拨打第一号码（小程序无邮件表单） */
   defaultNumber: '18903073765',
 }
 

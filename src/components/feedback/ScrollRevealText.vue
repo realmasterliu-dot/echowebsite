@@ -83,21 +83,24 @@ const tokens = computed(() => {
 
 const charCount = computed(() => tokens.value.filter((t) => !t.space).length)
 
-/** H5：top 88% → 0，top 55% → 1 */
+/** H5 对齐意图：更靠中屏才开始 scrub → 顶边约 72% 起、约 48% 满进度 */
 function scrubFromTop(top, windowHeight) {
-  const startY = windowHeight * 0.88
-  const endY = windowHeight * 0.55
+  const startY = windowHeight * 0.72
+  const endY = windowHeight * 0.48
   const range = startY - endY
   if (range <= 0) return top <= endY ? 1 : 0
   return Math.min(1, Math.max(0, (startY - top) / range))
 }
 
-/** 段落与视口有实质交集 → 视为在视口内，应播完 */
+/** 段落有足够可见高度后才自动播完 */
 function isInViewport(rect, windowHeight) {
   if (!rect) return false
-  const topVisible = rect.top < windowHeight * 0.92
-  const bottomVisible = rect.bottom > windowHeight * 0.05
-  return topVisible && bottomVisible
+  const topVisible = rect.top < windowHeight * 0.75
+  const bottomVisible = rect.bottom > windowHeight * 0.18
+  const visibleTop = Math.max(rect.top, 0)
+  const visibleBottom = Math.min(rect.bottom, windowHeight)
+  const visibleH = visibleBottom - visibleTop
+  return topVisible && bottomVisible && visibleH >= 48
 }
 
 function getWindowHeight() {

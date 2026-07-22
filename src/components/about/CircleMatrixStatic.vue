@@ -111,7 +111,7 @@ function play() {
 
 useInViewOnce({
   selector: '.circle-matrix__grid',
-  triggerRatio: 0.85,
+  triggerRatio: 0.88,
   onEnter: () => play(),
 })
 

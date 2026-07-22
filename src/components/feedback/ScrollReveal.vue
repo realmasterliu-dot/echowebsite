@@ -23,7 +23,9 @@ const props = defineProps({
   distance: { type: Number, default: 48 },
   duration: { type: Number, default: 0.75 },
   delay: { type: Number, default: 0 },
-  triggerRatio: { type: Number, default: 0.85 },
+  triggerRatio: { type: Number, default: 0.88 },
+  /** 超时兜底（ms）；默认交给 useInViewOnce，仅防永久空白 */
+  fallbackMs: { type: Number, default: 20000 },
   /** 撑满父级高度（业务卡等高） */
   fill: { type: Boolean, default: false },
 })
@@ -69,6 +71,7 @@ const boxStyle = computed(() => {
 useInViewOnce({
   selector: '.scroll-reveal__target',
   triggerRatio: props.triggerRatio,
+  fallbackMs: props.fallbackMs,
   onEnter: () => {
     nextTick(() => {
       setTimeout(() => {

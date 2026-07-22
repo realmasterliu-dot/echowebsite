@@ -1,7 +1,7 @@
 <template>
   <!--
-    联系卡片 — 对应 H5 ContactInfo 左侧 FluidGlass 卡片
-    简化玻璃拟态为白底卡片；电话行可一键拨号
+    联系卡片 — 对齐 H5 ContactInfo 左侧 FluidGlass 卡片
+    电话：图标 | 姓名 | 号码（右对齐）；整行可拨号
   -->
   <view class="contact-panel">
     <view class="contact-panel__brand">
@@ -9,29 +9,24 @@
       <text class="contact-panel__name">{{ company.name }}</text>
     </view>
 
-    <view class="contact-panel__phones">
-      <button
-        v-for="item in phones"
-        :key="item.number"
-        class="contact-panel__phone-row tap-reset"
-        @click="onCall(item.number)"
-      >
-        <image
-          class="contact-panel__phone-icon"
-          :src="resolveIcon('phone')"
-          mode="aspectFit"
-        />
-        <view class="contact-panel__phone-meta">
+    <view class="contact-panel__details">
+      <view class="contact-panel__phones">
+        <view
+          v-for="item in phones"
+          :key="item.number"
+          class="contact-panel__phone-row"
+          hover-class="contact-panel__phone-row--active"
+          @click="onCall(item.number)"
+        >
+          <image
+            class="contact-panel__icon"
+            :src="resolveIcon('phone')"
+            mode="aspectFit"
+          />
           <text class="contact-panel__person">{{ item.person }}</text>
-          <text class="contact-panel__number">{{ item.display }}</text>
+          <text class="contact-panel__phone">{{ item.display }}</text>
         </view>
-        <text class="contact-panel__dial">拨打</text>
-      </button>
-    </view>
-
-    <view class="contact-panel__address">
-      <text class="contact-panel__address-label">地址</text>
-      <text class="contact-panel__address-text">{{ company.address }}</text>
+      </view>
     </view>
 
     <button class="contact-panel__btn tap-reset" @click="onConsult">
@@ -66,15 +61,20 @@ const onConsult = () => {
 </script>
 
 <style lang="scss" scoped>
+/* 对齐 ContactInfo.css 卡片区；玻璃拟态在 MP 用半透明白 + 柔光近似 */
 .contact-panel {
   display: flex;
   flex-direction: column;
-  gap: $space-lg;
-  padding: $space-xl $space-lg;
-  background: $color-surface;
-  border-radius: $radius-lg;
-  border: 1rpx solid $color-border-light;
-  box-shadow: $shadow-md;
+  height: 100%;
+  padding: $space-lg;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1rpx solid rgba(255, 255, 255, 0.55);
+  border-radius: $radius-md;
+  box-shadow:
+    $shadow-md,
+    0 0 60rpx rgba($color-primary, 0.06),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.45);
 }
 
 .contact-panel__brand {
@@ -82,98 +82,88 @@ const onConsult = () => {
   flex-direction: column;
   align-items: center;
   gap: $space-sm;
+  margin-bottom: $space-md;
 }
 
 .contact-panel__logo {
   width: 100%;
-  max-width: 420rpx;
+  max-width: 560rpx; /* H5 max-width: 280px */
 }
 
 .contact-panel__name {
-  font-size: $fs-md;
+  font-size: 30rpx; /* ≈0.95rem */
   font-weight: $fw-bold;
   color: $color-text;
   text-align: center;
 }
 
+.contact-panel__details {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  margin-bottom: $space-md;
+  flex: 1;
+}
+
+/* H5：grid 图标 / 姓名 / 号码 */
 .contact-panel__phones {
   display: flex;
   flex-direction: column;
-  gap: $space-sm;
+  gap: $space-xs;
 }
 
 .contact-panel__phone-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 40rpx max-content 1fr;
   align-items: center;
-  gap: $space-md;
-  padding: $space-md;
-  background: $color-bg-alt;
-  border-radius: $radius-md;
-  text-align: left;
+  column-gap: $space-xs;
+  padding: $space-xs 0;
 }
 
-.contact-panel__phone-icon {
+.contact-panel__phone-row--active {
+  opacity: 0.72;
+}
+
+.contact-panel__icon {
   width: 40rpx;
   height: 40rpx;
-  flex-shrink: 0;
-}
-
-.contact-panel__phone-meta {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-  min-width: 0;
 }
 
 .contact-panel__person {
-  font-size: $fs-sm;
+  font-size: 30rpx;
   color: $color-text-secondary;
+  white-space: nowrap;
 }
 
-.contact-panel__number {
-  font-size: $fs-xl;
+.contact-panel__phone {
+  font-size: 30rpx;
   font-weight: $fw-semibold;
-  color: $color-primary;
-}
-
-.contact-panel__dial {
-  flex-shrink: 0;
-  font-size: $fs-sm;
-  color: $color-primary;
-  font-weight: $fw-medium;
-}
-
-.contact-panel__address {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.contact-panel__address-label {
-  font-size: $fs-sm;
-  color: $color-text-light;
-}
-
-.contact-panel__address-text {
-  font-size: $fs-md;
-  color: $color-text-secondary;
-  line-height: 1.6;
+  color: $color-text;
+  text-align: right;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .contact-panel__btn {
-  @include flex-center;
-  gap: $space-sm;
-  height: 88rpx;
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  padding: 28rpx;
   border-radius: $radius-full;
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  background: linear-gradient(135deg, $color-primary, $color-primary-dark);
   color: #fff;
-  font-size: $fs-lg;
+  font-size: 30rpx;
   font-weight: $fw-semibold;
+  box-shadow: 0 12rpx 48rpx rgba($color-primary, 0.25);
+  box-sizing: border-box;
 }
 
 .contact-panel__btn-icon {
-  width: 36rpx;
-  height: 36rpx;
+  width: 32rpx;
+  height: 32rpx;
 }
 </style>

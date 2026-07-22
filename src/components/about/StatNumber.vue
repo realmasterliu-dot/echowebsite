@@ -94,9 +94,8 @@ function runCountUp() {
 
 useInViewOnce({
   selector: '.stat-number__target',
-  // 更早触发：顶边到视口约 95% 高度即开播（原 0.7 偏晚）
-  triggerRatio: 0.95,
-  fallbackMs: 1200,
+  triggerRatio: 0.88,
+  fallbackMs: 20000,
   onEnter: () => runCountUp(),
 })
 
