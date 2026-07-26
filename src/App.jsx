@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
@@ -18,29 +17,6 @@ import GrainientBg from './components/shared/GrainientBg'
 library.add(fas, fab)
 
 export default function App() {
-  // Active nav tracking via IntersectionObserver
-  useEffect(() => {
-    const sections = ['hero', 'about', 'pricing', 'process', 'contact']
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.2) {
-            // Update active nav by dispatching custom event
-            window.dispatchEvent(new CustomEvent('section-active', { detail: entry.target.id }))
-          }
-        })
-      },
-      { threshold: [0.2, 0.5] }
-    )
-
-    sections.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <div className="app">
       {/* ===== HOME SECTION ===== */}

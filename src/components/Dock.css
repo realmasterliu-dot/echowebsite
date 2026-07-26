@@ -9,6 +9,15 @@
   transform: translateX(-50%);
   z-index: var(--z-dock);
   padding-bottom: env(safe-area-inset-bottom);
+  transition: transform 0.45s var(--ease-out-expo), opacity 0.3s ease;
+  will-change: transform, opacity;
+}
+
+/* 向下滚动时隐藏，向上滚动 / 停止滚动时显示 */
+.dock.dock--hidden {
+  transform: translateX(-50%) translateY(160%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .dock__inner {
