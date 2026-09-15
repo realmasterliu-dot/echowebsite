@@ -36,7 +36,7 @@ export default function BorderGlow({
     const distToBottom = rect.height - y
     const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom)
 
-    const intensity = Math.max(0, 1 - minDist / edgeSensity) * glowIntensity
+    const intensity = Math.max(0, 1 - minDist / edgeSensitivity) * glowIntensity
     divRef.current.style.setProperty('--glow-intensity', intensity)
   }
 

@@ -30,10 +30,11 @@ export default function ContactInfo() {
             </div>
           </div>
 
-          <button className="contact-info__btn">
+          {/* 点击直接拨打咨询电话：桌面端会唤起系统对 tel: 的处理程序（FaceTime / 拨号程序） */}
+          <a className="contact-info__btn" href="tel:18923282944">
             <FontAwesomeIcon icon={['fas', 'paper-plane']} />
             <span>发送咨询</span>
-          </button>
+          </a>
         </FluidGlass>
       </ScrollReveal>
 

@@ -102,6 +102,10 @@
   color: #fff;
   font-size: 0.95rem;
   font-weight: 600;
+  /* 本元素由 <button> 改为 <a href="tel:">，必须显式写 normal：
+     <button> 的浏览器默认行高就是 normal，而 <a> 会继承 body 的 line-height 1.7，
+     不写会导致按钮从 43.5px 被撑到 53.84px，撑高整张卡片。 */
+  line-height: normal;
   cursor: pointer;
   transition:
     transform 0.3s var(--ease-out-expo),

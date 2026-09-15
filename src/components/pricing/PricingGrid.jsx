@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ScrollReveal from '../shared/ScrollReveal'
 import BorderGlow from '../shared/BorderGlow'
 import { pricingPlans, videoPricingPlans, pricingPlanTabs } from '../../data/content'

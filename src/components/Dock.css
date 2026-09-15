@@ -55,9 +55,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Hover / Active scale */
+/* Hover / Active scale
+   ⚠️ 只用 scale，不要加 translateY。
+   橙色高亮块就是 item 自身的盒模型，item 一上移，高亮块就跟着抬出导航条：
+   实测 hover 时距玻璃条上沿 -2.27px（戳出边缘）、距下沿 9.73px，
+   视觉上就是「橙色块没居中」。纯 scale 的 transform-origin 是中心（50% 50%），
+   放大后上下左右留白相等，天然居中。
+   尺寸校验：块高 54.5px × 1.12 = 61.04px < 容器内高 68.5px，放大后也不会溢出。 */
 .dock__item:hover {
-  transform: translateY(-6px) scale(1.12);
+  transform: scale(1.12);
   color: var(--color-primary);
   background: rgba(var(--color-primary-rgb), 0.08);
 }
@@ -70,9 +76,10 @@
   transform: scale(1.05);
 }
 
-/* Neighbor magnification on hover via sibling selector */
-.dock__track:hover .dock__item:hover + .dock__item { transform: translateY(-3px) scale(1.06); }
-.dock__track:hover .dock__item:has(+ .dock__item:hover) { transform: translateY(-3px) scale(1.06); }
+/* Neighbor magnification on hover via sibling selector
+   同上：只缩放不位移，否则被放大的邻项会跟着抬起，整排基线不齐 */
+.dock__track:hover .dock__item:hover + .dock__item { transform: scale(1.06); }
+.dock__track:hover .dock__item:has(+ .dock__item:hover) { transform: scale(1.06); }
 
 .dock__icon {
   font-size: 1.15rem;
