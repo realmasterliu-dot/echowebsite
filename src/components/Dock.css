@@ -3,6 +3,14 @@
    ============================================================ */
 
 .dock {
+  /* 四个导航项的统一宽度。
+     原先宽度靠 padding + 文案长度自然撑开：「了解更多 / 联系我们」（4 字）比
+     「首页 / 价格」（2 字）各宽 18.48px，四个按钮不等宽、图标也排不成等距网格。
+     改为固定宽度后四项一律等宽，图标与文字都在各自橙块的正中。
+     取值依据：最宽标签 = 4 字 × 0.62rem(9.92px) + 字距 ≈ 40.48px，
+     减去左右 padding 24px 后内容区需 ≥ 40.48px；68 − 24 = 44px，富余 3.52px。
+     实测整体几乎没变胖：玻璃条内宽 292px（原 288.95px，+3px）。 */
+  --dock-item-w: 68px;
   position: fixed;
   bottom: 12px;
   left: 50%;
@@ -44,7 +52,10 @@
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  padding: 10px 18px;
+  /* 等宽：宽度只由 --dock-item-w 决定，与文案长短无关；flex 不伸不缩，避免被挤压 */
+  width: var(--dock-item-w);
+  flex: 0 0 auto;
+  padding: 10px 12px;
   border-radius: 18px;
   color: var(--color-text-secondary);
   transition:
@@ -120,6 +131,10 @@
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .dock {
+    /* 手机端标签字号降到 0.56rem(8.96px)，最宽标签只需 4 × 8.96 ≈ 36.56px，
+       等宽值随之收到 60px；四项总宽 4×60 + 3×2 = 246px，加内边距 256px，
+       仍在 max-width: 320px 之内。实测玻璃条内宽 258px（原 235.13px，+23px）。 */
+    --dock-item-w: 60px;
     bottom: 12px;             /* 略微下压，减少遮挡 */
     left: 50%;
     transform: translateX(-50%);
@@ -137,7 +152,7 @@
   }
 
   .dock__item {
-    padding: 9px 12px;        /* 缩小，高度更矮、点击区域更紧凑 */
+    padding: 9px 10px;        /* 缩小，高度更矮、点击区域更紧凑（宽度由 --dock-item-w 固定） */
     gap: 3px;
   }
 

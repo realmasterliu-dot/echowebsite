@@ -88,7 +88,7 @@
   white-space: nowrap;
 }
 
-/* CTA button */
+/* CTA button —— 点击复制号码 */
 .contact-info__btn {
   width: 100%;
   margin-top: auto;
@@ -97,14 +97,17 @@
   justify-content: center;
   gap: 10px;
   padding: 14px;
+  border: none;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: #fff;
   font-size: 0.95rem;
   font-weight: 600;
-  /* 本元素由 <button> 改为 <a href="tel:">，必须显式写 normal：
-     <button> 的浏览器默认行高就是 normal，而 <a> 会继承 body 的 line-height 1.7，
-     不写会导致按钮从 43.5px 被撑到 53.84px，撑高整张卡片。 */
+  /* <button> 不会继承 body 的字体（UA 会给它系统默认字体，本站是江城圆体），
+     不写 inherit 会跟页面其余文字不是一款字。 */
+  font-family: inherit;
+  /* 同理：<button> 默认行高 normal，一旦换成 <a> 会继承 body 的 1.7，
+     按钮会被撑高 10px 顶高整张卡片，所以显式钉死。 */
   line-height: normal;
   cursor: pointer;
   transition:
@@ -151,6 +154,72 @@
   color: var(--color-text-light);
   line-height: 1.65;
   font-style: italic;
+}
+
+/* ---- 复制号码提示气泡 ---- */
+/* 由 portal 挂到 <body>，脱离卡片作用域，所以定位基准是视口。
+   bottom 取 116px：导航栏底距 12px + 高约 66px ≈ 顶到 78px，气泡落在它上方约 38px，
+   不会互相遮挡。z-index 高于导航栏（导航栏设的 var(--z-dock) 实际未定义，等于 auto）。 */
+.copy-toast {
+  position: fixed;
+  left: 50%;
+  /* 基础样式必须自带 translateX(-50%)：animation 结束后元素会回落到基础样式，
+     不写这一句气泡会在动画收尾时向右跳半个身位。keyframes 里也重复了同样的值。 */
+  transform: translateX(-50%);
+  bottom: 116px;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 32px);
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(20px) saturate(1.7);
+  -webkit-backdrop-filter: blur(20px) saturate(1.7);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.28);
+  box-shadow:
+    0 10px 32px rgba(31, 38, 135, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: copyToastIn 0.32s var(--ease-out-expo);
+}
+
+.copy-toast__icon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* 复制失败：换红调，避免「明明没复制成功却弹绿色对勾」 */
+.copy-toast--error {
+  border-color: rgba(200, 40, 40, 0.35);
+}
+
+.copy-toast--error .copy-toast__icon {
+  color: #C82828;
+}
+
+@keyframes copyToastIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* 尊重系统的「减弱动态效果」设置 */
+@media (prefers-reduced-motion: reduce) {
+  .copy-toast {
+    animation: none;
+  }
 }
 
 /* ---- Responsive ---- */
