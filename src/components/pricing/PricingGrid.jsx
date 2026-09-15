@@ -1,15 +1,31 @@
+import { useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ScrollReveal from '../shared/ScrollReveal'
 import BorderGlow from '../shared/BorderGlow'
-import { pricingPlans } from '../../data/content'
+import { pricingPlans, videoPricingPlans, pricingPlanTabs } from '../../data/content'
 import './PricingGrid.css'
 
 /**
  * PricingGrid — 价格套餐
- * 4张卡片：light / orange(最受欢迎) / light / dark(旗舰领航)
- * BorderGlow 边缘流光 + 圆点 feature 列表
+ * 顶部「全案套餐 / 仅视频套餐」滑块切换器 + 4张卡片
+ * 全案：light / orange(最受欢迎) / light / dark(旗舰领航)
+ * 仅视频：4张统一 light、无角标（不含探店与笔记两段内容）
+ * BorderGlow 边缘流光 + 勾选 feature 列表
  */
 export default function PricingGrid() {
+  // 默认展示全案套餐；切换只换数据源，不改卡片样式与排版
+  const [planTab, setPlanTab] = useState('full')
+  const gridRef = useRef(null)
+
+  const plans = planTab === 'video' ? videoPricingPlans : pricingPlans
+
+  const handleTabChange = (value) => {
+    if (value === planTab) return
+    setPlanTab(value)
+    // 窄屏（≤768px）网格会变成横向滚动列表，切换后回到第一张卡
+    if (gridRef.current) gridRef.current.scrollLeft = 0
+  }
+
   return (
     <section id="pricing" className="pricing section">
       <ScrollReveal>
@@ -19,14 +35,61 @@ export default function PricingGrid() {
         </div>
       </ScrollReveal>
 
-      <div className="pricing__grid">
-        {pricingPlans.map((plan, i) => (
-          <ScrollReveal key={plan.id} direction="up" delay={i * 0.1}>
+      <PricingPlanSwitch value={planTab} options={pricingPlanTabs} onChange={handleTabChange} />
+
+      <div className="pricing__grid" ref={gridRef}>
+        {/*
+          key 用下标而非 plan.id：切换套餐时若重新挂载 ScrollReveal，
+          新挂载的容器会被 gsap.set 设成 opacity:0，要等下一次滚动事件才淡入，
+          用户会看到一片空白。用稳定 key 让外层不重挂载、只换卡片内容
+          （卡片配色由 plan.theme → BorderGlow 内联样式驱动，会正常刷新）。
+        */}
+        {plans.map((plan, i) => (
+          <ScrollReveal key={i} direction="up" delay={i * 0.1}>
             <PricingCard plan={plan} index={i} />
           </ScrollReveal>
         ))}
       </div>
     </section>
+  )
+}
+
+/**
+ * PricingPlanSwitch — 套餐切换器（滑块式分段控件）
+ *
+ * ⚠️ 两个选项必须固定等宽：外层轨道宽度是由内容撑开的（fit-content），
+ * 若选项用 flex:1 平分，会按各自文字长度分配宽度 ——「全案套餐」4字比
+ * 「仅视频套餐」5字窄，而滑块宽度是按轨道等分算的，两者中心就对不上，
+ * 看起来就是「文字没在橙色按钮中间」。故这里固定 120px。
+ * 尺寸：2×120 + 3×2(padding) + 1×2(border) = 248px，滑块 calc 恰好 = 120px。
+ */
+function PricingPlanSwitch({ value, options, onChange }) {
+  const activeIndex = Math.max(
+    0,
+    options.findIndex((o) => o.value === value),
+  )
+
+  return (
+    <div className="plan-switch">
+      <div className={`plan-switch__track plan-switch__track--n${options.length}`}>
+        <span
+          className="plan-switch__thumb"
+          style={{ transform: `translateX(${activeIndex * 100}%)` }}
+          aria-hidden="true"
+        />
+        {options.map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            className={`plan-switch__item${opt.value === value ? ' plan-switch__item--active' : ''}`}
+            onClick={() => onChange(opt.value)}
+            aria-pressed={opt.value === value}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }
 
