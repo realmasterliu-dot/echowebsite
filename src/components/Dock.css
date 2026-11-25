@@ -80,7 +80,7 @@
   gap: 2.5px;
   padding: 6px 2px;
   border-radius: 999px;
-  color: #514641;
+  color: #796d65;
   pointer-events: auto;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -91,7 +91,7 @@
   pointer-events: none;
 }
 
-.dock__item::before {
+.dock__item--active::before {
   content: '';
   position: absolute;
   inset: 0 1px;
@@ -105,17 +105,11 @@
     inset 0 0.5px 1.5px rgba(255, 255, 255, 0.64),
     inset 0 -0.5px 1px rgba(150, 70, 27, 0.16),
     0 0.5px 1.5px rgba(88, 46, 24, 0.10);
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 190ms ease-out;
 }
 
 .dock__item--active {
   color: #b33a09;
-}
-
-.dock__item--active::before {
-  opacity: 1;
 }
 
 .dock__item:focus-visible {
@@ -132,7 +126,8 @@
   height: 20px;
   font-size: 20px;
   line-height: 1;
-  color: #626262;
+  color: #8b8b8b;
+  transition: transform 160ms ease-out;
 }
 
 .dock__item--active .dock__icon {
@@ -150,17 +145,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .dock__item:hover {
-    transform: scale(1.12);
-  }
-
-  .dock__item:not(.dock__item--active):hover::before {
-    opacity: 0.6;
-  }
-
-  .dock__item:hover + .dock__item,
-  .dock__item:has(+ .dock__item:hover) {
-    transform: scale(1.06);
+  .dock__item:hover .dock__icon {
+    transform: scale(1.08);
   }
 }
 
@@ -171,7 +157,7 @@
 @media (prefers-reduced-motion: reduce) {
   .dock,
   .dock__item,
-  .dock__item::before {
+  .dock__icon {
     transition: none;
   }
 }

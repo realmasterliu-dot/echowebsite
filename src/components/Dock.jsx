@@ -5,7 +5,7 @@ import './Dock.css'
 
 /**
  * 固定在页面底部的悬浮玻璃导航栏
- * 固定在页面底部，4个导航项，hover放大+邻近放大效果
+ * 桌面端悬停时轻微放大图标
  *
  * 行为：
  *  - 当前导航项随滚动位置自动高亮（IntersectionObserver 监听各 section）
