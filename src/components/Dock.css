@@ -1,175 +1,177 @@
-/* ============================================================
-   Dock — Apple Liquid Glass Bottom Navigation
-   ============================================================ */
-
 .dock {
-  /* 四个导航项的统一宽度。
-     原先宽度靠 padding + 文案长度自然撑开：「了解更多 / 联系我们」（4 字）比
-     「首页 / 价格」（2 字）各宽 18.48px，四个按钮不等宽、图标也排不成等距网格。
-     改为固定宽度后四项一律等宽，图标与文字都在各自橙块的正中。
-     取值依据：最宽标签 = 4 字 × 0.62rem(9.92px) + 字距 ≈ 40.48px，
-     减去左右 padding 24px 后内容区需 ≥ 40.48px；68 − 24 = 44px，富余 3.52px。
-     实测整体几乎没变胖：玻璃条内宽 292px（原 288.95px，+3px）。 */
-  --dock-item-w: 68px;
   position: fixed;
+  right: 0;
   bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--z-dock);
+  left: 0;
+  z-index: var(--z-dock, 100);
+  width: min(307px, calc(100% - 32px));
+  margin-inline: auto;
   padding-bottom: env(safe-area-inset-bottom);
+  pointer-events: none;
   transition: transform 0.45s var(--ease-out-expo), opacity 0.3s ease;
-  will-change: transform, opacity;
 }
 
-/* 向下滚动时隐藏，向上滚动 / 停止滚动时显示 */
+/* 向下滚动时隐藏，向上滚动或停止滚动时显示。 */
 .dock.dock--hidden {
-  transform: translateX(-50%) translateY(160%);
+  transform: translateY(160%);
   opacity: 0;
-  pointer-events: none;
 }
 
 .dock__inner {
-  padding: 6px;
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(24px) saturate(1.8);
-  -webkit-backdrop-filter: blur(24px) saturate(1.8);
-  border-radius: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  position: relative;
+  padding: 3.5px;
+  border-radius: 999px;
   box-shadow:
-    0 8px 32px rgba(31, 38, 135, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    0 4.5px 13px rgba(52, 33, 23, 0.10),
+    0 0.5px 2.5px rgba(52, 33, 23, 0.10);
+}
+
+/* 玻璃面单独取样背景，图标和文字保持清晰。 */
+.dock__glass {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: rgba(252, 249, 247, 0.49);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(76, 51, 37, 0.22),
+    inset 0 0.75px 1px rgba(255, 255, 255, 0.87),
+    inset 0 -0.75px 1px rgba(255, 255, 255, 0.74),
+    inset 0 -2px 4px rgba(93, 52, 26, 0.09);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .dock__glass {
+    background: linear-gradient(
+      155deg,
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.16) 46%,
+      rgba(255, 250, 245, 0.26) 100%
+    );
+    -webkit-backdrop-filter: blur(6px) saturate(1.13) brightness(1.10);
+    backdrop-filter: blur(6px) saturate(1.13) brightness(1.10);
+  }
+}
+
+.dock__glass::after {
+  content: '';
+  position: absolute;
+  inset: 0.5px;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 42% 18% at 15% 0%, rgba(255, 255, 255, 0.64), transparent 100%),
+    radial-gradient(ellipse 39% 15% at 90% 100%, rgba(255, 255, 255, 0.63), transparent 100%);
 }
 
 .dock__track {
+  position: relative;
   display: flex;
-  gap: 2px;
+  align-items: stretch;
 }
 
 .dock__item {
   position: relative;
   display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  /* 等宽：宽度只由 --dock-item-w 决定，与文案长短无关；flex 不伸不缩，避免被挤压 */
-  width: var(--dock-item-w);
-  flex: 0 0 auto;
-  padding: 10px 12px;
-  border-radius: 18px;
-  color: var(--color-text-secondary);
-  transition:
-    transform 0.3s var(--ease-out-expo),
-    color 0.25s ease,
-    background 0.25s ease;
+  justify-content: center;
+  gap: 2.5px;
+  padding: 6px 2px;
+  border-radius: 999px;
+  color: #514641;
+  pointer-events: auto;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.3s var(--ease-out-expo);
 }
 
-/* Hover / Active scale
-   ⚠️ 只用 scale，不要加 translateY。
-   橙色高亮块就是 item 自身的盒模型，item 一上移，高亮块就跟着抬出导航条：
-   实测 hover 时距玻璃条上沿 -2.27px（戳出边缘）、距下沿 9.73px，
-   视觉上就是「橙色块没居中」。纯 scale 的 transform-origin 是中心（50% 50%），
-   放大后上下左右留白相等，天然居中。
-   尺寸校验：块高 54.5px × 1.12 = 61.04px < 容器内高 68.5px，放大后也不会溢出。 */
-.dock__item:hover {
-  transform: scale(1.12);
-  color: var(--color-primary);
-  background: rgba(var(--color-primary-rgb), 0.08);
+.dock--hidden .dock__item {
+  pointer-events: none;
+}
+
+.dock__item::before {
+  content: '';
+  position: absolute;
+  inset: 0 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 251, 247, 0.45),
+    rgba(255, 234, 220, 0.22)
+  );
+  box-shadow:
+    inset 0 0.5px 1.5px rgba(255, 255, 255, 0.64),
+    inset 0 -0.5px 1px rgba(150, 70, 27, 0.16),
+    0 0.5px 1.5px rgba(88, 46, 24, 0.10);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 190ms ease-out;
 }
 
 .dock__item--active {
-  color: var(--color-primary);
+  color: #b33a09;
 }
 
-.dock__item--active .dock__icon {
-  transform: scale(1.05);
-}
-
-/* Neighbor magnification on hover via sibling selector
-   同上：只缩放不位移，否则被放大的邻项会跟着抬起，整排基线不齐 */
-.dock__track:hover .dock__item:hover + .dock__item { transform: scale(1.06); }
-.dock__track:hover .dock__item:has(+ .dock__item:hover) { transform: scale(1.06); }
-
-.dock__icon {
-  font-size: 1.15rem;
-  line-height: 1;
-  transition: transform 0.3s var(--ease-out-expo);
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dock__label {
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.dock__item:hover .dock__label,
-.dock__item--active .dock__label {
+.dock__item--active::before {
   opacity: 1;
 }
 
-/* Active dot indicator */
-.dock__indicator {
-  position: absolute;
-  bottom: 5px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  animation: pulseGlow 2s ease-in-out infinite;
+.dock__item:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 768px) {
-  .dock {
-    /* 手机端标签字号降到 0.56rem(8.96px)，最宽标签只需 4 × 8.96 ≈ 36.56px，
-       等宽值随之收到 60px；四项总宽 4×60 + 3×2 = 246px，加内边距 256px，
-       仍在 max-width: 320px 之内。实测玻璃条内宽 258px（原 235.13px，+23px）。 */
-    --dock-item-w: 60px;
-    bottom: 12px;             /* 略微下压，减少遮挡 */
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;              /* 不再撑满，让内容决定宽度 */
-    max-width: 320px;         /* 收窄，更不挡视线 */
+.dock__icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 1;
+  color: #626262;
+}
+
+.dock__item--active .dock__icon {
+  color: var(--color-primary);
+}
+
+.dock__label {
+  position: relative;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-shadow: 0 0.5px 1.5px rgba(255, 251, 248, 0.62);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dock__item:hover {
+    transform: scale(1.12);
   }
 
-  .dock__inner {
-    border-radius: 24px;      /* 圆角略收 */
-    padding: 5px;             /* 减薄内边距，整体更矮 */
+  .dock__item:not(.dock__item--active):hover::before {
+    opacity: 0.6;
   }
 
-  .dock__track {
-    justify-content: center;  /* 确保内容居中 */
+  .dock__item:hover + .dock__item,
+  .dock__item:has(+ .dock__item:hover) {
+    transform: scale(1.06);
   }
+}
 
-  .dock__item {
-    padding: 9px 10px;        /* 缩小，高度更矮、点击区域更紧凑（宽度由 --dock-item-w 固定） */
-    gap: 3px;
-  }
+.dock__item:active {
+  transform: scale(0.95);
+}
 
-  .dock__icon {
-    font-size: 1.1rem;        /* 图标缩小 */
-    width: 24px;
-    height: 24px;
-  }
-
-  .dock__label {
-    font-size: 0.56rem;       /* 字号缩小，更精致 */
-  }
-
-  /* 点指示器上移，避免与文字重叠 */
-  .dock__indicator {
-    bottom: 3px;
-    width: 4px;
-    height: 4px;
+@media (prefers-reduced-motion: reduce) {
+  .dock,
+  .dock__item,
+  .dock__item::before {
+    transition: none;
   }
 }
